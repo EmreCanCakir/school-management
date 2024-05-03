@@ -2,6 +2,7 @@ version: '3.4'
 
 services:
   lecturemanagement:
+    container_name: sms-lecturemanagement
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
@@ -13,13 +14,14 @@ services:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
   db:
-    container_name: sqlserver-db
+    container_name: sms-sqlserver-db
     environment:
       ACCEPT_EULA: 'Y'
       MSSQL_SA_PASSWORD: 'YourStrong!Passw0rd'
     ports:
       - "1433:1433"
   usermanagement:
+    container_name: sms-usermanagement
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=5000
