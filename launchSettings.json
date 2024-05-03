@@ -4,11 +4,11 @@
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
       "composeLaunchAction": "LaunchBrowser",
-      "composeLaunchServiceName": "testdrivendevelopmentapp",
+      "composeLaunchServiceName": "schoolmanagement",
       "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}/swagger",
       "serviceActions": {
-        "testdrivendevelopmentapp": "StartDebugging",
-        "authmanagement": "StartDebugging"
+        "lecturemanagement": "StartDebugging",
+        "usermanagement": "StartDebugging"
       }
     }
   }

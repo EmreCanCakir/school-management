@@ -7,7 +7,7 @@
     <ProjectGuid>2c4e84f6-d28b-43bf-a730-81ff3f4dd43d</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/swagger</DockerServiceUrl>
-    <DockerServiceName>testdrivendevelopmentapp</DockerServiceName>
+    <DockerServiceName>schoolmanagement</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
     <None Include="docker-compose.override.yml">
