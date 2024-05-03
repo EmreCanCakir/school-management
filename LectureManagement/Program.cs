@@ -24,7 +24,7 @@ ConfigureRabbitMQ();
 ConfigureRedis();
 
 var app = builder.Build();
-app.Services.CreateScope().ServiceProvider.GetRequiredService<MainDbContext>().Database.Migrate();
+//app.Services.CreateScope().ServiceProvider.GetRequiredService<MainDbContext>().Database.Migrate();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
