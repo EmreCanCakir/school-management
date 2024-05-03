@@ -1,4 +1,3 @@
-using Contracts;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -6,10 +5,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.Text;
-using LectureManagement.Consumer;
-using LectureManagement.Core.Cache;
-using LectureManagement.DataAccess;
-using LectureManagement.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,19 +38,7 @@ app.Run();
 
 void ConfigureServices(IServiceCollection services) {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-    services.AddHttpClient<AuthClient>(client =>
-    {
-        client.BaseAddress = new Uri(builder.Configuration.GetValue<string>("usermanagement_url"));
-    }).ConfigurePrimaryHttpMessageHandler(_ => new HttpClientHandler
-    {
-        ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; }
-    });
     services.AddAutoMapper(Assembly.GetExecutingAssembly());
-    services.AddDbContext<MainDbContext>(options => options.UseSqlServer(connectionString));
-    services.AddTransient<IBookService, BookService>();
-    services.AddTransient<IBookDal, EfBookDal>();
-    //services.AddDistributedMemoryCache();
-    services.AddSingleton<ICacheService, CacheService>();
 }
 
 void ConfigureSwagger()
@@ -113,7 +96,7 @@ void ConfigureRabbitMQ()
     builder.Services.AddMassTransit(busConfigurator =>
     {
         busConfigurator.SetKebabCaseEndpointNameFormatter();
-        busConfigurator.AddConsumer<AuthTokenGeneratedConsumer>();
+        //busConfigurator.AddConsumer<AuthTokenGeneratedConsumer>();
 
         busConfigurator.UsingRabbitMq((context, cfg) =>
         {

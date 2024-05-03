@@ -5,15 +5,13 @@ VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LectureManagement", "LectureManagement\LectureManagement.csproj", "{6BB0BBB0-4E5A-4F39-A6B5-7E7E6492785D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LectureManagement.Tests", "LectureManagement.Tests\LectureManagement.Tests.csproj", "{9F45E214-3095-4FDC-9058-836FFDD8A156}"
-EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{2C4E84F6-D28B-43BF-A730-81FF3F4DD43D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserManagement", "UserManagement\UserManagement.csproj", "{084FAE87-6BC8-4010-9BF6-E72E8F1DAD7F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contracts", "Contracts\Contracts.csproj", "{03A79F91-13F7-4EDF-B947-A16120A19333}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{0D0B7963-6300-48AD-8222-1E75D74F276C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{0D0B7963-6300-48AD-8222-1E75D74F276C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +23,6 @@ Global
 		{6BB0BBB0-4E5A-4F39-A6B5-7E7E6492785D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6BB0BBB0-4E5A-4F39-A6B5-7E7E6492785D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6BB0BBB0-4E5A-4F39-A6B5-7E7E6492785D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9F45E214-3095-4FDC-9058-836FFDD8A156}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9F45E214-3095-4FDC-9058-836FFDD8A156}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9F45E214-3095-4FDC-9058-836FFDD8A156}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9F45E214-3095-4FDC-9058-836FFDD8A156}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2C4E84F6-D28B-43BF-A730-81FF3F4DD43D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2C4E84F6-D28B-43BF-A730-81FF3F4DD43D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2C4E84F6-D28B-43BF-A730-81FF3F4DD43D}.Release|Any CPU.ActiveCfg = Release|Any CPU

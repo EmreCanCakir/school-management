@@ -1,5 +1,3 @@
-using UserManagement.Consumer;
-using UserManagement.Services;
 using MassTransit;
 using Microsoft.AspNetCore.Identity;
 using UserManagement.Models;
@@ -10,8 +8,6 @@ using System;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddSingleton<ITokenService, TokenService>();
-
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -72,7 +68,7 @@ void ConfigureRabbitMQ()
     builder.Services.AddMassTransit(busConfigurator =>
     {
         busConfigurator.SetKebabCaseEndpointNameFormatter();
-        busConfigurator.AddConsumer<AuthTokenCreateConsumer>();
+        //busConfigurator.AddConsumer<AuthTokenCreateConsumer>();
 
         busConfigurator.UsingRabbitMq((context, cfg) =>
         {
