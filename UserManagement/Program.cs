@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Identity;
 using UserManagement.Models;
 using UserManagement.DataAccess;
 using Microsoft.EntityFrameworkCore;
-using System;
+using UserManagement;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +13,19 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(config =>
+{
+    config.DocumentFilter<SwaggerDocumentFilter>();
+
+    config.DocInclusionPredicate((docName, apiDesc) =>
+    {
+        var routeTemplate = apiDesc.RelativePath;
+        if (routeTemplate == "/manage/2fa")
+            return false;
+        return true;
+    });
+}
+);
 
 ConfigureServices();
 
@@ -81,4 +95,12 @@ void ConfigureRabbitMQ()
             cfg.ConfigureEndpoints(context);
         });
     });
+}
+
+public class SwaggerDocumentFilter : IDocumentFilter
+{
+    public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
+    {
+        swaggerDoc.Paths.Remove("/manage/2fa");
+    }
 }
