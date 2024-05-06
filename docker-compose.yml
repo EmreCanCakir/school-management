@@ -32,6 +32,18 @@ services:
     ports:
       - "5000:5000"
       - "5001:5001"
+    
+  client:
+    image: ${DOCKER_REGISTRY-}client
+    container_name: sms-client
+    build:
+      context: .
+      dockerfile: SchoolManagementClient/Dockerfile
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+    depends_on:
+      - usermanagement
   
   rabbitmq:
     image: rabbitmq:3-management

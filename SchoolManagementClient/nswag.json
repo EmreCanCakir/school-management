@@ -1,0 +1,10 @@
+{
+    "runtime": "Net",
+    "runtimeVersion": "8.0",
+    "clientGenerators": {
+      "nsclient": {
+        "template": "NSwagCSharpClient"
+      }
+    }
+  }
+  

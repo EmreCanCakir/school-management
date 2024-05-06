@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contracts", "Contracts\Cont
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{0D0B7963-6300-48AD-8222-1E75D74F276C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchoolManagementClient", "SchoolManagementClient\SchoolManagementClient.csproj", "{A5BE8B3D-15AF-4F3D-BA57-CB9EE31B123E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{0D0B7963-6300-48AD-8222-1E75D74F276C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D0B7963-6300-48AD-8222-1E75D74F276C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0D0B7963-6300-48AD-8222-1E75D74F276C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5BE8B3D-15AF-4F3D-BA57-CB9EE31B123E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5BE8B3D-15AF-4F3D-BA57-CB9EE31B123E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5BE8B3D-15AF-4F3D-BA57-CB9EE31B123E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5BE8B3D-15AF-4F3D-BA57-CB9EE31B123E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
