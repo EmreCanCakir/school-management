@@ -6,6 +6,13 @@ using Microsoft.EntityFrameworkCore;
 using UserManagement;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using UserManagement.Core.ExceptionHandler;
+using FluentValidation;
+using System.Reflection;
+using UserManagement.Services;
+using UserManagement.DataAccess.Abstracts;
+using UserManagement.DataAccess.Concretes;
+using UserManagement.Services.ValidationRules;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +47,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseExceptionHandler();
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
@@ -52,11 +61,25 @@ app.Run();
 
 void ConfigureServices()
 {
+    builder.Services.AddTransient<IUserDetailService, UserDetailService>();
+    builder.Services.AddTransient<IUserDetailDal, UserDetailDal>();
+
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
     builder.Services.AddMvc();
     builder.Services.AddDbContext<MainDbContext>(options => options.UseSqlServer(connectionString));
 
+    ConfigureIdentity();
+
+    builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+    builder.Services.AddProblemDetails();
+
+    builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+    builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+}
+
+void ConfigureIdentity()
+{
     builder.Services.AddAuthentication().AddBearerToken(IdentityConstants.BearerScheme);
     builder.Services.AddAuthorization();
 
@@ -76,7 +99,6 @@ void ConfigureServices()
         options.User.RequireUniqueEmail = true;
     }).AddEntityFrameworkStores<MainDbContext>().AddApiEndpoints();
 }
-
 void ConfigureRabbitMQ()
 {
     builder.Services.AddMassTransit(busConfigurator =>

@@ -9,10 +9,10 @@ namespace Infrastructure.Business
 {
     public interface IBaseService<T>
     {
-        IResult Add(T entity);
-        IResult Delete(T entity);
-        IResult Update(T entity);
-        IDataResult<List<T>> GetAll();
-        IDataResult<T> GetById(int id);
+        Task<IResult> Add(T entity);
+        Task<IResult> Delete(T entity);
+        Task<IResult> Update(T entity);
+        Task<IDataResult<List<T>>> GetAll();
+        Task<IDataResult<T>> GetById(int id);
     }
 }
