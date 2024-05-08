@@ -1,16 +1,18 @@
 ﻿namespace UserManagement.Models
 {
-    public class Teacher: UserDetail
+    public class Lecturer: UserDetail
     {
         public string? Title { get; set; }
-        public string? Position { get; set; }
+        public int PositionId { get; set; }
+#nullable disable
         public string EmployeeNumber { get; set; }
+#nullable enable
         public DateTime HireDate { get; set; }
         public decimal? Salary { get; set; }
-        public TeacherStatus TeacherStatus { get; set; }
+        public LecturerStatus LecturerStatus { get; set; }
     }
 
-    public enum TeacherStatus
+    public enum LecturerStatus
     {
         Active,
         Inactive,
