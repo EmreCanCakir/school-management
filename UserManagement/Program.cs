@@ -13,6 +13,8 @@ using UserManagement.Services;
 using UserManagement.DataAccess.Abstracts;
 using UserManagement.DataAccess.Concretes;
 using UserManagement.Services.ValidationRules;
+using Infrastructure.Converter;
+using Microsoft.OpenApi.Any;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +32,11 @@ builder.Services.AddSwaggerGen(config =>
         if (routeTemplate == "/manage/2fa")
             return false;
         return true;
+    });
+
+    config.MapType<DateOnly>(() => new OpenApiSchema 
+    {
+        Type = "string", Format = "date", Example = new OpenApiString(DateTime.Today.ToString("yyyy-MM-dd")) 
     });
 }
 );
@@ -67,6 +74,12 @@ void ConfigureServices()
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
     builder.Services.AddMvc();
+    builder.Services.AddControllers()
+        .AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.Converters.Add(new DateOnlyJsonConverter());
+        });
+
     builder.Services.AddDbContext<MainDbContext>(options => options.UseSqlServer(connectionString));
 
     ConfigureIdentity();
