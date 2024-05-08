@@ -42,8 +42,6 @@ services:
     ports:
       - "3000:3000"
       - "3001:3001"
-    depends_on:
-      - usermanagement
   
   rabbitmq:
     image: rabbitmq:3-management
