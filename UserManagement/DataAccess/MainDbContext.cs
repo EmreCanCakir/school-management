@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using UserManagement.Models;
 
@@ -19,30 +20,53 @@ namespace UserManagement.DataAccess
                 .ToTable("user_details")
                 .HasOne(ud => ud.User)
                 .WithOne(u => u.UserDetail)
-                .HasForeignKey<User>(ud => ud.Id);
+                .HasForeignKey<UserDetail>(ud => ud.UserId);
 
-            builder.Entity<Teacher>().ToTable("user_details")
+            builder.Entity<Lecturer>().ToTable("user_details")
                 .HasBaseType<UserDetail>()
                 .HasDiscriminator<string>("UserType")
-                .HasValue<Teacher>("Teacher");
+                .HasValue<Lecturer>("Lecturer");
 
             builder.Entity<Student>().ToTable("user_details")
                 .HasBaseType<UserDetail>()
                 .HasDiscriminator<string>("UserType")
                 .HasValue<Student>("Student");
 
-            builder.Entity<Teacher>()
+            ConfigureUserDetailProperties(builder);
+            SeedRoles(builder);
+        }
+
+        private static void ConfigureUserDetailProperties(ModelBuilder builder)
+        {
+            builder.Entity<UserDetail>()
+                .Property(ud => ud.IdentityNumber).IsRequired();
+            builder.Entity<UserDetail>()
+                .Property(ud => ud.FirstName).IsRequired();
+            builder.Entity<UserDetail>()
+                .Property(ud => ud.LastName).IsRequired();
+            builder.Entity<UserDetail>()
+                .Property(ud => ud.DepartmentId).IsRequired();
+            builder.Entity<UserDetail>()
+                .Property(ud => ud.FacultyId).IsRequired();
+            builder.Entity<UserDetail>()
+                .Property(ud => ud.UserId).IsRequired();
+            builder.Entity<UserDetail>()
+                .Property(ud => ud.CreatedAt).ValueGeneratedOnAdd();
+            builder.Entity<UserDetail>()
+                .Property(ud => ud.UpdatedAt).ValueGeneratedOnAddOrUpdate();
+
+            builder.Entity<Lecturer>()
                 .Property(t => t.Title).IsRequired(false);
-            builder.Entity<Teacher>()
-                .Property(t => t.Position).IsRequired(false);
-            builder.Entity<Teacher>()
+            builder.Entity<Lecturer>()
+                .Property(t => t.PositionId).IsRequired();
+            builder.Entity<Lecturer>()
                 .Property(t => t.EmployeeNumber).IsRequired();
-            builder.Entity<Teacher>()
+            builder.Entity<Lecturer>()
                 .Property(t => t.HireDate).IsRequired();
-            builder.Entity<Teacher>()
+            builder.Entity<Lecturer>()
                 .Property(t => t.Salary).IsRequired(false);
-            builder.Entity<Teacher>()
-                .Property(t => t.TeacherStatus).IsRequired();
+            builder.Entity<Lecturer>()
+                .Property(t => t.LecturerStatus).IsRequired();
 
             builder.Entity<Student>()
                 .Property(s => s.StudentNumber).IsRequired();
@@ -56,6 +80,29 @@ namespace UserManagement.DataAccess
                 .Property(s => s.GPA).IsRequired(false);
             builder.Entity<Student>()
                 .Property(s => s.AdvisorId).IsRequired(false);
+        }
+        private static void SeedRoles(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<IdentityRole>().HasData(
+                new IdentityRole
+                {
+                    ConcurrencyStamp = "1",
+                    Name = "Student",
+                    NormalizedName = "STUDENT"
+                },
+                new IdentityRole
+                {
+                    ConcurrencyStamp = "2",
+                    Name = "Lecturer",
+                    NormalizedName = "LECTURER"
+                },
+                new IdentityRole
+                {
+                    ConcurrencyStamp = "3",
+                    Name = "Admin",
+                    NormalizedName = "ADMIN"
+                }
+            );
         }
     }
 }

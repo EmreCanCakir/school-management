@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UserManagement.DataAccess;
 
@@ -11,9 +12,11 @@ using UserManagement.DataAccess;
 namespace UserManagement.Migrations
 {
     [DbContext(typeof(MainDbContext))]
-    partial class MainDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240507091215_ChangeUserDetailAndSeedRoles")]
+    partial class ChangeUserDetailAndSeedRoles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,21 +54,21 @@ namespace UserManagement.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "e2352e09-d8f2-4d87-b860-1e9181381b29",
+                            Id = "1e705930-0c62-4d96-9c76-5b0ec9ec1827",
                             ConcurrencyStamp = "1",
                             Name = "Student",
                             NormalizedName = "STUDENT"
                         },
                         new
                         {
-                            Id = "05c5d63e-b174-4a03-8626-1ecadbe73e5e",
+                            Id = "a781ac63-4428-4efb-ba7a-bbe6e2e1075c",
                             ConcurrencyStamp = "2",
                             Name = "Lecturer",
                             NormalizedName = "LECTURER"
                         },
                         new
                         {
-                            Id = "57f92ec8-692c-49f9-9126-5ebb51919944",
+                            Id = "1829cde2-583f-4ecc-9751-8ace702cf901",
                             ConcurrencyStamp = "3",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
@@ -246,14 +249,12 @@ namespace UserManagement.Migrations
             modelBuilder.Entity("UserManagement.Models.UserDetail", b =>
                 {
                     b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2");
 
                     b.Property<DateOnly>("DateOfBirth")
@@ -266,7 +267,6 @@ namespace UserManagement.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Gender")
@@ -276,18 +276,15 @@ namespace UserManagement.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MiddleName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("UserType")
@@ -298,7 +295,8 @@ namespace UserManagement.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("UserId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[UserId] IS NOT NULL");
 
                     b.ToTable("user_details", (string)null);
 
@@ -321,8 +319,8 @@ namespace UserManagement.Migrations
                     b.Property<int>("LecturerStatus")
                         .HasColumnType("int");
 
-                    b.Property<int>("PositionId")
-                        .HasColumnType("int");
+                    b.Property<string>("Position")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("Salary")
                         .HasColumnType("decimal(18,2)");
@@ -418,9 +416,7 @@ namespace UserManagement.Migrations
                 {
                     b.HasOne("UserManagement.Models.User", "User")
                         .WithOne("UserDetail")
-                        .HasForeignKey("UserManagement.Models.UserDetail", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserManagement.Models.UserDetail", "UserId");
 
                     b.Navigation("User");
                 });
