@@ -36,6 +36,8 @@ services:
   client:
     image: ${DOCKER_REGISTRY-}client
     container_name: sms-client
+    environment:
+        - USERMANAGEMENT_URL=http://usermanagement:5000
     build:
       context: .
       dockerfile: SchoolManagementClient/Dockerfile

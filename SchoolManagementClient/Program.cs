@@ -1,10 +1,48 @@
+using Microsoft.AspNetCore.Identity;
 using NSwag;
 using NSwag.CodeGeneration.CSharp;
+using OpenApiService;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+var httpClientHandler = new HttpClientHandler();
+httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
+
+var httpClient = new HttpClient(httpClientHandler);
+
+builder.Services.AddSingleton<UserManagementClient>(services =>
+    new UserManagementClient(builder.Configuration.GetValue<string>("USERMANAGEMENT_URL"), httpClient));
+
+//builder.Services.AddAuthentication().AddBearerToken(IdentityConstants.BearerScheme);
+
+//builder.Services.AddSession();
+//builder.Services.AddHttpContextAccessor();
+
+//var app = builder.Build();
+
+//app.UseAuthentication();
+//app.UseAuthorization();
+
+// Add authentication
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = "Bearer";
+    options.DefaultChallengeScheme = "Bearer";
+}).AddJwtBearer("Bearer", options =>
+{
+    options.Authority = builder.Configuration.GetValue<string>("USERMANAGEMENT_URL");
+    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    {
+        ValidateAudience = false
+    };
+    options.RequireHttpsMetadata = false;
+});
+
+// Add authorization
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -20,7 +58,13 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+//app.UseRouting();
 
+//app.UseAuthentication();
+//app.UseAuthorization();
+//app.UseSession();
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
@@ -39,12 +83,13 @@ async static Task GenerateCSharpClient(string filePath, string generatePath, str
         {
             var settings = new CSharpClientGeneratorSettings
             {
-                UseBaseUrl = false,
+                UseBaseUrl = true,
                 ClassName = className,
                 CSharpGeneratorSettings =
                 {
                     Namespace = "OpenApiService",
-                }
+                },
+                GenerateClientInterfaces = true,
             };
 
             var generator = new CSharpClientGenerator(document, settings);

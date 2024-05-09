@@ -15,6 +15,7 @@ using UserManagement.DataAccess.Concretes;
 using UserManagement.Services.ValidationRules;
 using Infrastructure.Converter;
 using Microsoft.OpenApi.Any;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,6 +59,7 @@ app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
