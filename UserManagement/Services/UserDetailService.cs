@@ -4,7 +4,7 @@ using Infrastructure.Utilities.Results;
 using UserManagement.DataAccess.Abstracts;
 using UserManagement.Models;
 using UserManagement.Services.ValidationRules;
-
+using IResult = Infrastructure.Utilities.Results.IResult;
 namespace UserManagement.Services
 {
     public class UserDetailService : IUserDetailService
@@ -14,28 +14,28 @@ namespace UserManagement.Services
         {
             _userDetailDal = userDetailDal;
         }
-        public async Task<Infrastructure.Utilities.Results.IResult> Add(UserDetail entity)
+        public async Task<IResult> Add(UserDetail entity)
         {
             await _userDetailDal.Add(entity);
             return new SuccessResult("User Created Successfully");
         }
 
-        public async Task<Infrastructure.Utilities.Results.IResult> Delete(UserDetail entity)
+        public Task<IResult> Delete(UserDetail entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IDataResult<List<UserDetail>>> GetAll()
+        public IDataResult<List<UserDetail>> GetAll()
         {
             throw new NotImplementedException();
         }
 
-        public Task<IDataResult<UserDetail>> GetById(int id)
+        public IDataResult<UserDetail> GetById(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<Infrastructure.Utilities.Results.IResult> Update(UserDetail entity)
+        public Task<IResult> Update(UserDetail entity)
         {
             throw new NotImplementedException();
         }

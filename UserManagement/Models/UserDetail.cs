@@ -9,7 +9,7 @@ namespace UserManagement.Models
  #nullable disable
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public string Id { get; set; }
+        public Guid Id { get; set; }
  #nullable enable
         public long IdentityNumber { get; set; }
 #nullable disable
