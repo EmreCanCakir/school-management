@@ -1,0 +1,6 @@
+# @OrganisationManagement_HostAddress = http://localhost:5084
+
+# GET {{OrganisationManagement_HostAddress}}/weatherforecast/
+# Accept: application/json
+
+###

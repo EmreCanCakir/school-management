@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contracts", "Contracts\Cont
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{0D0B7963-6300-48AD-8222-1E75D74F276C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchoolManagementClient", "SchoolManagementClient\SchoolManagementClient.csproj", "{A5BE8B3D-15AF-4F3D-BA57-CB9EE31B123E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SchoolManagementClient", "SchoolManagementClient\SchoolManagementClient.csproj", "{A5BE8B3D-15AF-4F3D-BA57-CB9EE31B123E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrganisationManagement", "OrganisationManagement\OrganisationManagement.csproj", "{B3D6AFF6-6D91-43BD-BC22-23DC2AED777A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{A5BE8B3D-15AF-4F3D-BA57-CB9EE31B123E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A5BE8B3D-15AF-4F3D-BA57-CB9EE31B123E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A5BE8B3D-15AF-4F3D-BA57-CB9EE31B123E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3D6AFF6-6D91-43BD-BC22-23DC2AED777A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3D6AFF6-6D91-43BD-BC22-23DC2AED777A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3D6AFF6-6D91-43BD-BC22-23DC2AED777A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3D6AFF6-6D91-43BD-BC22-23DC2AED777A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
