@@ -32,7 +32,22 @@ services:
     ports:
       - "5000:5000"
       - "5001:5001"
-    
+
+  organisationmanagement:
+    image: ${DOCKER_REGISTRY-}organisationmanagement
+    container_name: sms-organisationmanagement
+    environment:
+      - USERMANAGEMENT_URL=http://usermanagement:5000
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=4000
+      - ASPNETCORE_HTTPS_PORTS=4001
+    build:
+      context: .
+      dockerfile: OrganisationManagement/Dockerfile
+    ports:
+      - "4000:4000"
+      - "4001:4001"  
+
   client:
     image: ${DOCKER_REGISTRY-}client
     container_name: sms-client

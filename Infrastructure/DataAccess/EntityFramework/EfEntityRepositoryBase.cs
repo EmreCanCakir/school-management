@@ -16,8 +16,6 @@ namespace Infrastructure.DataAccess.EntityFramework
     {
         public async Task Add(TEntity entity)
         {
-            //IDisposable pattern implementation of c#
-            //using bittiği anda Garbage Collector gelip bellekten temizliyor. 
             using (TContext context = new TContext())
             {
                 var addedEntity = context.Entry(entity);
@@ -40,7 +38,7 @@ namespace Infrastructure.DataAccess.EntityFramework
         {
             using (TContext context = new TContext())
             {
-                return context.Set<TEntity>().SingleOrDefault(filter);
+                return context.Set<TEntity>().FirstOrDefault(filter);
             }
         }
 

@@ -12,6 +12,10 @@ namespace OrganisationManagement.DataAccess
         public MainDbContext(DbContextOptions<MainDbContext> options) : base(options)
         {
         }
+        public MainDbContext()
+        {
+            
+        }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -68,6 +72,10 @@ namespace OrganisationManagement.DataAccess
             builder.Entity<Department>()
                 .Property(d => d.Code).IsRequired();
             builder.Entity<Department>()
+                .HasIndex(d => d.Code).IsUnique();
+            builder.Entity<Department>()
+                .Property(d => d.Id).ValueGeneratedOnAdd();
+            builder.Entity<Department>()
                 .Property(d => d.CreatedAt).ValueGeneratedOnAdd();
             builder.Entity<Department>()
                 .Property(d => d.UpdatedAt).ValueGeneratedOnAddOrUpdate();
@@ -77,8 +85,10 @@ namespace OrganisationManagement.DataAccess
         {
             builder.Entity<Faculty>()
                 .Property(f => f.Name).IsRequired();
-            builder.Entity<Faculty>().
-                Property(f => f.Code).IsRequired();
+            builder.Entity<Faculty>()
+                .Property(f => f.Code).IsRequired();
+            builder.Entity<Faculty>()
+                .HasIndex(d => d.Code).IsUnique();
             builder.Entity<Faculty>()
                 .Property(f => f.Id).ValueGeneratedOnAdd();
             builder.Entity<Department>()
@@ -94,6 +104,8 @@ namespace OrganisationManagement.DataAccess
             builder.Entity<Lecture>()
                 .Property(l => l.Code).IsRequired();
             builder.Entity<Lecture>()
+                .HasIndex(d => d.Code).IsUnique();
+            builder.Entity<Lecture>()
                 .Property(l => l.Description).IsRequired(false);
             builder.Entity<Lecture>()
                 .Property(l => l.Level).IsRequired();
@@ -103,6 +115,8 @@ namespace OrganisationManagement.DataAccess
                 .Property(l => l.Credit).IsRequired();
             builder.Entity<Lecture>()
                 .Property(l => l.HoursInWeek).IsRequired();
+            builder.Entity<Lecture>()
+                .Property(l => l.Id).ValueGeneratedOnAdd();
             builder.Entity<Lecture>()
                 .Property(l => l.CreatedAt).ValueGeneratedOnAdd();
             builder.Entity<Lecture>()
@@ -114,6 +128,8 @@ namespace OrganisationManagement.DataAccess
                 .Property(c => c.Name).IsRequired();
             builder.Entity<Classroom>()
                 .Property(c => c.Code).IsRequired();
+            builder.Entity<Classroom>()
+                .HasIndex(d => d.Code).IsUnique();
             builder.Entity<Classroom>()
                 .Property(c => c.CreatedAt).ValueGeneratedOnAdd();
             builder.Entity<Classroom>()
