@@ -14,7 +14,6 @@ namespace OrganisationManagement.Model
         public string Code { get; set; }
         public Guid FacultyId { get; set; }
         public Faculty Faculty { get; set; }
-        public List<Lecture> Lectures { get; set; } = new List<Lecture>();
         public List<Classroom> Classrooms { get; set; } = new List<Classroom>();
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
