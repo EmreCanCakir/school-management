@@ -7,7 +7,6 @@ namespace OrganisationManagement.DataAccess
     {
         public DbSet<Department> Departments { get; set; }
         public DbSet<Faculty> Faculties { get; set; }
-        public DbSet<Lecture> Lectures { get; set; }
         public DbSet<Classroom> Classrooms { get; set; }
         public MainDbContext(DbContextOptions<MainDbContext> options) : base(options)
         {
@@ -26,27 +25,6 @@ namespace OrganisationManagement.DataAccess
                 .WithMany(f => f.Departments)
                 .HasForeignKey(d => d.FacultyId);
 
-            builder.Entity<Lecture>()
-                .HasOne(l => l.Department)
-                .WithMany(d => d.Lectures)
-                .HasForeignKey(l => l.DepartmentId)
-                .OnDelete(DeleteBehavior.Restrict);
-            
-            builder.Entity<Lecture>()
-                .HasOne(l => l.Faculty)
-                .WithMany(f => f.Lectures)
-                .HasForeignKey(l => l.FacultyId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<Lecture>()
-                .HasMany(l => l.Prerequisites)
-                .WithMany()
-                .UsingEntity<Dictionary<string, object>>(
-                    "LecturePrerequisite",
-                    j => j.HasOne<Lecture>().WithMany().HasForeignKey("LectureId"),
-                    j => j.HasOne<Lecture>().WithMany().HasForeignKey("PrerequisiteId")
-                );
-
             builder.Entity<Classroom>()
                 .HasOne(c => c.Department)
                 .WithMany(d => d.Classrooms)
@@ -61,7 +39,6 @@ namespace OrganisationManagement.DataAccess
 
             ConfigureDepartmentProperties(builder);
             ConfigureFacultyProperties(builder);
-            ConfigureLectureProperties(builder);
             ConfigureClassroomProperties(builder);
         }
 
@@ -97,31 +74,6 @@ namespace OrganisationManagement.DataAccess
                 .Property(d => d.UpdatedAt).ValueGeneratedOnAddOrUpdate();
         }
 
-        private static void ConfigureLectureProperties(ModelBuilder builder)
-        {
-            builder.Entity<Lecture>()
-                .Property(l => l.Name).IsRequired();
-            builder.Entity<Lecture>()
-                .Property(l => l.Code).IsRequired();
-            builder.Entity<Lecture>()
-                .HasIndex(d => d.Code).IsUnique();
-            builder.Entity<Lecture>()
-                .Property(l => l.Description).IsRequired(false);
-            builder.Entity<Lecture>()
-                .Property(l => l.Level).IsRequired();
-            builder.Entity<Lecture>()
-                .Property(l => l.Semester).IsRequired();
-            builder.Entity<Lecture>()
-                .Property(l => l.Credit).IsRequired();
-            builder.Entity<Lecture>()
-                .Property(l => l.HoursInWeek).IsRequired();
-            builder.Entity<Lecture>()
-                .Property(l => l.Id).ValueGeneratedOnAdd();
-            builder.Entity<Lecture>()
-                .Property(l => l.CreatedAt).ValueGeneratedOnAdd();
-            builder.Entity<Lecture>()
-                .Property(l => l.UpdatedAt).ValueGeneratedOnAddOrUpdate();
-        }
         private static void ConfigureClassroomProperties(ModelBuilder builder)
         {
             builder.Entity<Classroom>()
