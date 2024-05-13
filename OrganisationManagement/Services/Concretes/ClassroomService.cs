@@ -1,7 +1,9 @@
-﻿using Infrastructure.Business;
+﻿using AutoMapper;
+using Infrastructure.Business;
 using Infrastructure.Utilities.Results;
 using OrganisationManagement.DataAccess.Abstracts;
 using OrganisationManagement.Model;
+using OrganisationManagement.Model.Dtos;
 using OrganisationManagement.Services.Abstracts;
 using IResult = Infrastructure.Utilities.Results.IResult;
 
@@ -10,20 +12,24 @@ namespace OrganisationManagement.Services.Concretes
     public class ClassroomService : IClassroomService
     {
         private readonly IClassroomDal _classroomDal;
+        private readonly IMapper _mapper;
 
-        public ClassroomService(IClassroomDal classroomDal)
+        public ClassroomService(IClassroomDal classroomDal, IMapper mapper)
         {
             _classroomDal = classroomDal;
+            _mapper = mapper;
         }
 
-        public async Task<IResult> Add(Classroom entity)
+        public async Task<IResult> Add(ClassroomAddDto entity)
         {
-            await _classroomDal.Add(entity);
+            var classroom = _mapper.Map<Classroom>(entity);
+            await _classroomDal.Add(classroom);
             return new SuccessResult("Classroom Created Successfully");
         }
 
-        public async Task<IResult> Delete(Classroom entity)
+        public async Task<IResult> Delete(Guid id)
         {
+            var entity = _classroomDal.Get(x => x.Id == id);
             await _classroomDal.Delete(entity);
             return new SuccessResult("Classroom Deleted Successfully");
         }
@@ -40,9 +46,10 @@ namespace OrganisationManagement.Services.Concretes
             return new SuccessDataResult<Classroom>(result, "Classroom Get Successfully");
         }
 
-        public async Task<IResult> Update(Classroom entity)
+        public async Task<IResult> Update(ClassroomUpdateDto entity)
         {
-            await _classroomDal.Update(entity);
+            var classroom = _mapper.Map<Classroom>(entity);
+            await _classroomDal.Update(classroom);
             return new SuccessResult("Classroom Updated Successfully");
         }
     }

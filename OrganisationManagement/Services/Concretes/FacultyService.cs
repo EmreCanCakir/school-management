@@ -1,6 +1,9 @@
-﻿using Infrastructure.Utilities.Results;
+﻿using AutoMapper;
+using Infrastructure.Business;
+using Infrastructure.Utilities.Results;
 using OrganisationManagement.DataAccess.Abstracts;
 using OrganisationManagement.Model;
+using OrganisationManagement.Model.Dtos;
 using OrganisationManagement.Services.Abstracts;
 using IResult = Infrastructure.Utilities.Results.IResult;
 
@@ -9,21 +12,25 @@ namespace OrganisationManagement.Services.Concretes
     public class FacultyService : IFacultyService
     {
         private readonly IFacultyDal _facultyDal;
+        private readonly IMapper _mapper;
 
-        public FacultyService(IFacultyDal facultyDal)
+        public FacultyService(IFacultyDal facultyDal, IMapper mapper)
         {
             _facultyDal = facultyDal;
+            _mapper = mapper;
         }
 
-        public async Task<IResult> Add(Faculty entity)
+        public async Task<IResult> Add(FacultyAddDto entity)
         {
-            await _facultyDal.Add(entity);
+            var faculty = _mapper.Map<Faculty>(entity);
+            await _facultyDal.Add(faculty);
             return new SuccessResult("Faculty Created Successfully");
         }
 
-        public async Task<IResult> Delete(Faculty entity)
+        public async Task<IResult> Delete(Guid id)
         {
-            await _facultyDal.Delete(entity);
+            var faculty = _facultyDal.Get(x => x.Id == id);
+            await _facultyDal.Delete(faculty);
             return new SuccessResult("Faculty Deleted Successfully");
         }
 
@@ -39,9 +46,10 @@ namespace OrganisationManagement.Services.Concretes
             return new SuccessDataResult<Faculty>(result, "Faculty get Successfully");
         }
 
-        public async Task<IResult> Update(Faculty entity)
+        public async Task<IResult> Update(FacultyUpdateDto entity)
         {
-            await _facultyDal.Update(entity);
+            var faculty = _mapper.Map<Faculty>(entity);
+            await _facultyDal.Update(faculty);
             return new SuccessResult("Faculty Updated Successfully");
         }
     }

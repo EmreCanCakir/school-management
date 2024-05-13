@@ -1,6 +1,8 @@
-﻿using Infrastructure.Utilities.Results;
+﻿using AutoMapper;
+using Infrastructure.Utilities.Results;
 using OrganisationManagement.DataAccess.Abstracts;
 using OrganisationManagement.Model;
+using OrganisationManagement.Model.Dtos;
 using OrganisationManagement.Services.Abstracts;
 using IResult = Infrastructure.Utilities.Results.IResult;
 
@@ -9,20 +11,24 @@ namespace OrganisationManagement.Services.Concretes
     public class DepartmentService : IDepartmentService
     {
         private readonly IDepartmentDal _departmentDal;
+        private readonly IMapper _mapper;
 
-        public DepartmentService(IDepartmentDal departmentDal)
+        public DepartmentService(IDepartmentDal departmentDal, IMapper mapper)
         {
             _departmentDal = departmentDal;
+            _mapper = mapper;
         }
 
-        public async Task<IResult> Add(Department entity)
+        public async Task<IResult> Add(DepartmentAddDto entity)
         {
-            await _departmentDal.Add(entity);
+            var department = _mapper.Map<Department>(entity);
+            await _departmentDal.Add(department);
             return new SuccessResult("Department Created Successfully");
         }
 
-        public async Task<IResult> Delete(Department entity)
+        public async Task<IResult> Delete(Guid id)
         {
+            var entity = _departmentDal.Get(x=> x.Id == id);
             await _departmentDal.Delete(entity);
             return new SuccessResult("Department Deleted Successfully");
         }
@@ -39,9 +45,10 @@ namespace OrganisationManagement.Services.Concretes
             return new SuccessDataResult<Department>(result, "Department Get Successfully");
         }
 
-        public async Task<IResult> Update(Department entity)
+        public async Task<IResult> Update(DepartmentUpdateDto entity)
         {
-            await _departmentDal.Update(entity);
+            var department = _mapper.Map<Department>(entity);
+            await _departmentDal.Update(department);
             return new SuccessResult("Department Updated Successfully");
         }
     }

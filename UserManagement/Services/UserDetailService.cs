@@ -20,7 +20,7 @@ namespace UserManagement.Services
             return new SuccessResult("User Created Successfully");
         }
 
-        public Task<IResult> Delete(UserDetail entity)
+        public Task<IResult> Delete(Guid id)
         {
             throw new NotImplementedException();
         }
@@ -31,11 +31,6 @@ namespace UserManagement.Services
         }
 
         public IDataResult<UserDetail> GetById(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IResult> Update(UserDetail entity)
         {
             throw new NotImplementedException();
         }
