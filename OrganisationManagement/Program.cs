@@ -16,6 +16,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+ConfigureServices(builder);
+
 void ConfigureServices(WebApplicationBuilder builder)
 {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -23,15 +25,15 @@ void ConfigureServices(WebApplicationBuilder builder)
 
     builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
-    builder.Services.AddTransient<ILectureDal, LectureDal>();
     builder.Services.AddTransient<IDepartmentDal, DepartmentDal>();
     builder.Services.AddTransient<IFacultyDal, FacultyDal>();
     builder.Services.AddTransient<IClassroomDal, ClassroomDal>();
 
-    builder.Services.AddTransient<ILectureService, LectureService>();
     builder.Services.AddTransient<IDepartmentService, DepartmentService>();
     builder.Services.AddTransient<IFacultyService, FacultyService>();
     builder.Services.AddTransient<IClassroomService, ClassroomService>();
+
+    builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 }
 
 var app = builder.Build();
