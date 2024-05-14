@@ -14,7 +14,7 @@ namespace OrganisationManagement.Controllers
             _departmentService = departmentService;
         }
 
-        [HttpGet]
+        [HttpGet("GetAll")]
         public IActionResult GetDepartments()
         {
             var departments = _departmentService.GetAll();
@@ -38,7 +38,7 @@ namespace OrganisationManagement.Controllers
             return Ok(department);
         }
 
-        [HttpPost]
+        [HttpPost("Add")]
         public async Task<IActionResult> AddDepartment([FromBody] DepartmentAddDto department)
         {
             IResult result = await _departmentService.Add(department);
@@ -50,7 +50,7 @@ namespace OrganisationManagement.Controllers
             return Ok(result);
         }
 
-        [HttpPost]
+        [HttpPost("Update")]
         public async Task<IActionResult> UpdateDepartment([FromBody] DepartmentUpdateDto department)
         {
             IResult result = await _departmentService.Update(department);

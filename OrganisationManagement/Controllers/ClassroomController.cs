@@ -15,7 +15,7 @@ namespace OrganisationManagement.Controllers
             _classroomService = classroomService;
         }
 
-        [HttpGet]
+        [HttpGet("GetAll")]
         public IActionResult GetClassrooms()
         {
             var classrooms = _classroomService.GetAll();
@@ -39,7 +39,7 @@ namespace OrganisationManagement.Controllers
             return Ok(classroom);
         }
 
-        [HttpPost]
+        [HttpPost("Add")]
         public async Task<IActionResult> AddClassroom([FromBody] ClassroomAddDto classroom)
         {
             IResult result = await _classroomService.Add(classroom);
@@ -51,7 +51,7 @@ namespace OrganisationManagement.Controllers
             return Ok(result);
         }
 
-        [HttpPost]
+        [HttpPost("Update")]
         public async Task<IActionResult> UpdateClassroom([FromBody] ClassroomUpdateDto classroom)
         {
             IResult result = await _classroomService.Update(classroom);

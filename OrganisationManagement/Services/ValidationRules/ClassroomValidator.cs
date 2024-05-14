@@ -19,8 +19,6 @@ namespace OrganisationManagement.Services.ValidationRules
 
             RuleFor(c => c.Capacity).NotEmpty().WithMessage("Classroom capacity cannot be empty.");
             RuleFor(c => c.Capacity).GreaterThan(0).WithMessage("Classroom capacity must be greater than 0.");
-
-            RuleFor(c => c.FacultyId).NotEmpty().WithMessage("Faculty ID cannot be empty.");
             
             RuleFor(c => c.DepartmentId).NotEmpty().WithMessage("Department ID cannot be empty.");
         }

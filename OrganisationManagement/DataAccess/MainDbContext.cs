@@ -31,12 +31,6 @@ namespace OrganisationManagement.DataAccess
                 .HasForeignKey(c => c.DepartmentId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<Classroom>()
-                .HasOne(c => c.Faculty)
-                .WithMany(f => f.Classrooms)
-                .HasForeignKey(c => c.FacultyId)
-                .OnDelete(DeleteBehavior.Restrict);
-
             ConfigureDepartmentProperties(builder);
             ConfigureFacultyProperties(builder);
             ConfigureClassroomProperties(builder);

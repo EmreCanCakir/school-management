@@ -18,7 +18,7 @@ namespace OrganisationManagement.Controllers
             _facultyService = facultyService;
         }
 
-        [HttpGet]
+        [HttpGet("GetAll")]
         public IActionResult GetFaculties()
         {
             var faculties = _facultyService.GetAll();
@@ -42,7 +42,7 @@ namespace OrganisationManagement.Controllers
             return Ok(faculty);
         }
 
-        [HttpPost]
+        [HttpPost("Add")]
         public async Task<IActionResult> AddFaculty([FromBody] FacultyAddDto faculty)
         {
             IResult result = await _facultyService.Add(faculty);
@@ -54,7 +54,7 @@ namespace OrganisationManagement.Controllers
             return Ok(result);
         }
 
-        [HttpPost]
+        [HttpPost("Update")]
         public async Task<IActionResult> UpdateFaculty([FromBody] FacultyUpdateDto faculty)
         {
             IResult result = await _facultyService.Update(faculty);

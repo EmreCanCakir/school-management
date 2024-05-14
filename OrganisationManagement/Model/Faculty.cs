@@ -13,7 +13,6 @@ namespace OrganisationManagement.Model
         public string Name { get; set; }
         public string Code { get; set; }
         public List<Department> Departments { get; set; } = new List<Department>();
-        public List<Classroom> Classrooms { get; set; } = new List<Classroom>();
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime CreatedAt { get; set; }

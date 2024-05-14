@@ -13,8 +13,6 @@ namespace OrganisationManagement.Model
         public string Name { get; set; }
         public string Code { get; set; }
         public int Capacity { get; set; }
-        public Guid FacultyId { get; set; }
-        public Faculty Faculty { get; set; }
         public Guid DepartmentId { get; set; }
         public Department Department { get; set; }
 
