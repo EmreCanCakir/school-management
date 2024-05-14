@@ -3,7 +3,7 @@ using UserManagement.Models;
 
 namespace UserManagement.Services
 {
-    public interface IUserDetailService: IBaseService<UserDetail>
+    public interface IUserDetailService: IBaseService<UserDetail, Guid>, IAddService<UserDetail>
     {
     }
 }
