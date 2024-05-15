@@ -6,6 +6,7 @@ using OrganisationManagement.DataAccess.Concretes;
 using OrganisationManagement.Services.Abstracts;
 using OrganisationManagement.Services.Concretes;
 using System.Reflection;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +35,11 @@ void ConfigureServices(WebApplicationBuilder builder)
     builder.Services.AddTransient<IClassroomService, ClassroomService>();
 
     builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+    builder.Services.AddControllers().AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.WriteIndented = true;
+    });
 }
 
 var app = builder.Build();

@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OrganisationManagement.Model
 {
-#nullable disable
     public class Faculty: IEntity
     {
         [Key]
