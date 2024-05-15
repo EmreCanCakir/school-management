@@ -6,5 +6,8 @@ namespace OrganisationManagement.DataAccess.Concretes
 {
     public class DepartmentDal: EfEntityRepositoryBase<Department, MainDbContext>, IDepartmentDal
     {
+        public DepartmentDal(MainDbContext dbContext) : base(dbContext)
+        {
+        }
     }
 }
