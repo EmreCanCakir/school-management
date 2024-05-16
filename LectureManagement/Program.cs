@@ -22,6 +22,7 @@ builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.Converters.Add(new DateOnlyJsonConverter());
+        options.JsonSerializerOptions.Converters.Add(new TimeSpanJsonConverter());
     });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -30,7 +31,7 @@ ConfigureRabbitMQ();
 ConfigureRedis();
 
 var app = builder.Build();
-//app.Services.CreateScope().ServiceProvider.GetRequiredService<MainDbContext>().Database.Migrate();
+app.Services.CreateScope().ServiceProvider.GetRequiredService<MainDbContext>().Database.Migrate();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -49,7 +50,12 @@ app.Run();
 
 void ConfigureServices(IServiceCollection services) {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-    services.AddDbContext<MainDbContext>(options => options.UseSqlServer(connectionString));
+    services.AddDbContext<MainDbContext>(options =>
+    {
+        options.UseSqlServer(connectionString);
+        //options.UseQueryTrackingBehavior(QueryTrackingBehavior.TrackAll);
+        options.EnableSensitiveDataLogging();
+    });
 
     services.AddTransient<ILectureService, LectureService>();
     services.AddTransient<ILectureDal, LectureDal>();
@@ -81,6 +87,12 @@ void ConfigureSwagger()
             Type = "string",
             Format = "date",
             Example = new OpenApiString(DateTime.Today.ToString("yyyy-MM-dd"))
+        });
+        config.MapType<TimeSpan>(() => new OpenApiSchema
+        {
+            Type = "string",
+            Format = "time",
+            Example = new OpenApiString(DateTime.Today.ToString("HH:mm:ss"))
         });
     }
 );
