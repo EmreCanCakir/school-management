@@ -4,9 +4,9 @@ using LectureManagement.Model;
 
 namespace LectureManagement.DataAccess.Concretes
 {
-    public class AcademicYearDal: EfEntityRepositoryBase<AcademicYear, MainDbContext>, IAcademicYearService
+    public class LectureScheduleDal: EfEntityRepositoryBase<LectureSchedule, MainDbContext>, ILectureScheduleDal
     {
-        public AcademicYearDal(MainDbContext dbContext) : base(dbContext)
+        public LectureScheduleDal(MainDbContext dbContext) : base(dbContext)
         {
         }
     }
