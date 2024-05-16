@@ -384,3 +384,9 @@ FodyWeavers.xsd
 
 # redis
 *.rdb
+
+# db files
+instance_id
+*.bin
+*.hiv
+machine-key
