@@ -79,7 +79,7 @@ namespace UserManagement.DataAccess
             builder.Entity<Student>()
                 .Property(s => s.GPA).IsRequired(false);
             builder.Entity<Student>()
-                .Property(s => s.AdvisorId).IsRequired(false);
+                .Property(s => s.AdvisorId).IsRequired();
         }
         private static void SeedRoles(ModelBuilder modelBuilder)
         {

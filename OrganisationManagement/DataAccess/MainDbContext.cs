@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using OrganisationManagement.Model;
 
 namespace OrganisationManagement.DataAccess
@@ -60,9 +61,9 @@ namespace OrganisationManagement.DataAccess
             builder.Entity<Department>()
                 .Property(d => d.Id).ValueGeneratedOnAdd();
             builder.Entity<Department>()
-                .Property(d => d.CreatedAt).ValueGeneratedOnAdd();
+                .Property(d => d.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
             builder.Entity<Department>()
-                .Property(d => d.UpdatedAt).ValueGeneratedOnAddOrUpdate();
+                .Property(d => d.UpdatedAt).HasDefaultValueSql("GETUTCDATE()");
         }
 
         private static void ConfigureFacultyProperties(ModelBuilder builder)
@@ -76,9 +77,9 @@ namespace OrganisationManagement.DataAccess
             builder.Entity<Faculty>()
                 .Property(f => f.Id).ValueGeneratedOnAdd();
             builder.Entity<Faculty>()
-                .Property(d => d.CreatedAt).ValueGeneratedOnAdd();
+                .Property(d => d.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
             builder.Entity<Faculty>()
-                .Property(d => d.UpdatedAt).ValueGeneratedOnAddOrUpdate();
+                .Property(d => d.UpdatedAt).HasDefaultValueSql("GETUTCDATE()");
         }
 
         private static void ConfigureClassroomProperties(ModelBuilder builder)
@@ -90,9 +91,9 @@ namespace OrganisationManagement.DataAccess
             builder.Entity<Classroom>()
                 .HasIndex(d => d.Code).IsUnique();
             builder.Entity<Classroom>()
-                .Property(c => c.CreatedAt).ValueGeneratedOnAdd();
+                .Property(c => c.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
             builder.Entity<Classroom>()
-                .Property(c => c.UpdatedAt).ValueGeneratedOnAddOrUpdate();
+                .Property(c => c.UpdatedAt).HasDefaultValueSql("GETUTCDATE()");
             builder.Entity<Classroom>()
                 .Property(c => c.Id).ValueGeneratedOnAdd();
         }
