@@ -21,7 +21,7 @@ namespace LectureManagement.Controllers
             var lectures = _lectureService.GetAll();
             if (!lectures.Success)
             {
-                return BadRequest(lectures.Message);
+                return BadRequest(lectures);
             }
 
             return Ok(lectures);
@@ -33,7 +33,7 @@ namespace LectureManagement.Controllers
             var lecture = _lectureService.GetById(id);
             if (!lecture.Success)
             {
-                return BadRequest(lecture.Message);
+                return BadRequest(lecture);
             }
 
             return Ok(lecture);
@@ -57,7 +57,7 @@ namespace LectureManagement.Controllers
             var result = await _lectureService.Update(lecture);
             if (!result.Success)
             {
-                return BadRequest(result.Message);
+                return BadRequest(result);
             }
 
             return Ok(result);
@@ -69,7 +69,7 @@ namespace LectureManagement.Controllers
             var result = await _lectureService.Delete(id);
             if (!result.Success)
             {
-                return BadRequest(result.Message);
+                return BadRequest(result);
             }
 
             return Ok(result);

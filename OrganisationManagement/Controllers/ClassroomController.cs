@@ -21,7 +21,7 @@ namespace OrganisationManagement.Controllers
             var classrooms = _classroomService.GetAll();
             if (!classrooms.Success)
             {
-                return BadRequest(classrooms.Message);
+                return BadRequest(classrooms);
             }
 
             return Ok(classrooms);
@@ -33,7 +33,7 @@ namespace OrganisationManagement.Controllers
             var classroom = _classroomService.GetById(id);
             if (!classroom.Success)
             {
-                return BadRequest(classroom.Message);
+                return BadRequest(classroom);
             }
 
             return Ok(classroom);
@@ -45,7 +45,7 @@ namespace OrganisationManagement.Controllers
             IResult result = await _classroomService.Add(classroom);
             if (!result.Success)
             {
-                return BadRequest(result.Message);
+                return BadRequest(result);
             }
 
             return Ok(result);
@@ -57,7 +57,7 @@ namespace OrganisationManagement.Controllers
             IResult result = await _classroomService.Update(classroom);
             if (!result.Success)
             {
-                return BadRequest(result.Message);
+                return BadRequest(result);
             }
 
             return Ok(result);
@@ -69,7 +69,7 @@ namespace OrganisationManagement.Controllers
             IResult result = await _classroomService.Delete(id);
             if (!result.Success)
             {
-                return BadRequest(result.Message);
+                return BadRequest(result);
             }
 
             return Ok(result);

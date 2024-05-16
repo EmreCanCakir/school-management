@@ -21,7 +21,7 @@ namespace LectureManagement.Controllers
             var result = _lectureScheduleService.GetAll();
             if (!result.Success)
             {
-                return BadRequest(result.Message);
+                return BadRequest(result);
             }
 
             return Ok(result);
@@ -33,7 +33,7 @@ namespace LectureManagement.Controllers
             var result = _lectureScheduleService.GetById(id);
             if (!result.Success)
             {
-                return BadRequest(result.Message);
+                return BadRequest(result);
             }
 
             return Ok(result);
@@ -45,7 +45,7 @@ namespace LectureManagement.Controllers
             var result = await _lectureScheduleService.Add(lectureSchedule);
             if (!result.Success)
             {
-                return BadRequest(result.Message);
+                return BadRequest(result);
             }
 
             return Ok(result);
@@ -57,7 +57,7 @@ namespace LectureManagement.Controllers
             var result = await _lectureScheduleService.Update(lectureSchedule);
             if (!result.Success)
             {
-                return BadRequest(result.Message);
+                return BadRequest(result);
             }
 
             return Ok(result);
@@ -69,7 +69,7 @@ namespace LectureManagement.Controllers
             var result = await _lectureScheduleService.Delete(id);
             if (!result.Success)
             {
-                return BadRequest(result.Message);
+                return BadRequest(result);
             }
 
             return Ok(result);

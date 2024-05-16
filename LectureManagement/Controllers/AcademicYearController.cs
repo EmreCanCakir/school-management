@@ -22,7 +22,7 @@ namespace LectureManagement.Controllers
             var result = _academicYearService.GetAll();
             if (!result.Success)
             {
-                return BadRequest(result.Message);
+                return BadRequest(result);
             }
 
             return Ok(result);
@@ -34,7 +34,7 @@ namespace LectureManagement.Controllers
             var result = _academicYearService.GetById(id);
             if (!result.Success)
             {
-                return BadRequest(result.Message);
+                return BadRequest(result);
             }
 
             return Ok(result);
@@ -46,7 +46,7 @@ namespace LectureManagement.Controllers
             var result = await _academicYearService.Add(academicYear);
             if (!result.Success)
             {
-                return BadRequest(result.Message);
+                return BadRequest(result);
             }
 
             return Ok(result);
@@ -58,7 +58,7 @@ namespace LectureManagement.Controllers
             var result = await _academicYearService.Update(academicYear);
             if (!result.Success)
             {
-                return BadRequest(result.Message);
+                return BadRequest(result);
             }
             return Ok(_academicYearService.Update(academicYear));
         }
@@ -69,7 +69,7 @@ namespace LectureManagement.Controllers
             var result = await _academicYearService.Delete(id);
             if (!result.Success)
             {
-                return BadRequest(result.Message);
+                return BadRequest(result);
             }
             return Ok(result);
         }
@@ -80,7 +80,7 @@ namespace LectureManagement.Controllers
             var result = await _academicYearService.SetStatus(id, status);
             if (!result.Success)
             {
-                return BadRequest(result.Message);
+                return BadRequest(result);
             }
 
             return Ok(result);
