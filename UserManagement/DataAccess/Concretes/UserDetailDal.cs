@@ -1,6 +1,4 @@
 ﻿using Infrastructure.DataAccess;
-using Infrastructure.DataAccess.EntityFramework;
-using Infrastructure.Entities.Abstracts;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using UserManagement.DataAccess.Abstracts;
@@ -25,8 +23,7 @@ namespace UserManagement.DataAccess.Concretes
 
         async Task IEntityRepository<UserDetail>.Delete(UserDetail entity)
         {
-            var deletedEntity = _context.Entry(entity);
-            deletedEntity.State = EntityState.Deleted;
+            _context.Set<UserDetail>().Remove(entity);
             await _context.SaveChangesAsync();
         }
 
@@ -42,10 +39,11 @@ namespace UserManagement.DataAccess.Concretes
                 : _context.Set<UserDetail>().Where(filter).ToList();
         }
 
-        async Task IEntityRepository<UserDetail>.Update(UserDetail entity)
+        async Task IEntityRepository<UserDetail>.Update(UserDetail entity, Guid id)
         {
-            var updatedEntity = _context.Entry(entity);
-            updatedEntity.State = EntityState.Modified;
+            var updatedEntity = _context.Set<UserDetail>().Find(id);
+            _context.Entry(updatedEntity).CurrentValues.SetValues(entity);
+
             await _context.SaveChangesAsync();
         }
     }

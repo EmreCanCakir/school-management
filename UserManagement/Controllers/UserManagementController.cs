@@ -29,7 +29,7 @@ namespace UserManagement.Controllers
         }
 
         [HttpPost("StudentRegister")]
-        public async Task<Results<Ok, ValidationProblem>> RegisterStudent([FromBody]StudentRegisterDto registration, [FromServices] IServiceProvider sp)
+        public async Task<Results<Ok, ValidationProblem>> RegisterStudent([FromBody] StudentRegisterDto registration, [FromServices] IServiceProvider sp)
         {
             return await RegisterUser(registration, sp);
         }

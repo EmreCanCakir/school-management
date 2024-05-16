@@ -13,8 +13,8 @@ namespace UserManagement.Models
         public long IdentityNumber { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public Guid DepartmentId { get; set; }
-        public Guid FacultyId { get; set; }
+        public string DepartmentId { get; set; }
+        public string FacultyId { get; set; }
         public string UserId { get; set; }
 #nullable enable
         public string? MiddleName { get; set; }

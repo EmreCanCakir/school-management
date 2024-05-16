@@ -51,21 +51,21 @@ namespace UserManagement.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "e2352e09-d8f2-4d87-b860-1e9181381b29",
+                            Id = "bb4e6253-ae82-49ad-bc43-b7d85bd04a4b",
                             ConcurrencyStamp = "1",
                             Name = "Student",
                             NormalizedName = "STUDENT"
                         },
                         new
                         {
-                            Id = "05c5d63e-b174-4a03-8626-1ecadbe73e5e",
+                            Id = "8624ad50-4897-456d-b27b-762826506eca",
                             ConcurrencyStamp = "2",
                             Name = "Lecturer",
                             NormalizedName = "LECTURER"
                         },
                         new
                         {
-                            Id = "57f92ec8-692c-49f9-9126-5ebb51919944",
+                            Id = "e0127198-f1f2-46cd-8657-623d7b1947bc",
                             ConcurrencyStamp = "3",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
@@ -245,25 +245,28 @@ namespace UserManagement.Migrations
 
             modelBuilder.Entity("UserManagement.Models.UserDetail", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<DateOnly>("DateOfBirth")
                         .HasColumnType("date");
 
-                    b.Property<int>("DepartmentId")
-                        .HasColumnType("int");
+                    b.Property<string>("DepartmentId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("FacultyId")
-                        .HasColumnType("int");
+                    b.Property<string>("FacultyId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -284,7 +287,8 @@ namespace UserManagement.Migrations
 
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -339,8 +343,8 @@ namespace UserManagement.Migrations
                 {
                     b.HasBaseType("UserManagement.Models.UserDetail");
 
-                    b.Property<string>("AdvisorId")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("AdvisorId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("DegreeProgram")
                         .HasColumnType("nvarchar(max)");
