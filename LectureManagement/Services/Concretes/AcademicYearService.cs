@@ -72,21 +72,21 @@ namespace LectureManagement.Services.Concretes
             }
 
             academicYear.Status = status;
-            await _academicYearDal.Update(academicYear);
+            await _academicYearDal.Update(academicYear, academicYear.Id);
             return new SuccessResult($"Academic Year Status: {status.ToString()}, Updated Successfully");
         }
 
-        public async Task<IResult> Update(AcademicYear entity)
+        public async Task<IResult> Update(AcademicYearUpdateDto entity)
         {
-            await _academicYearDal.Update(entity);
-
-            var validAcademicYear = IsAcademicYearValid(entity);
+            var academicYear = _mapper.Map<AcademicYear>(entity);
+            var validAcademicYear = IsAcademicYearValid(academicYear);
 
             if (!validAcademicYear.Success)
             {
                 return validAcademicYear;
             }
 
+            await _academicYearDal.Update(academicYear, academicYear.Id);
             return new SuccessResult("Academic Year Updated Successfully");
         }
 

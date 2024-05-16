@@ -4,6 +4,7 @@ using LectureManagement.DataAccess.Abstracts;
 using LectureManagement.Model;
 using LectureManagement.Model.Dtos;
 using LectureManagement.Services.Abstracts;
+using System.Linq;
 using IResult = Infrastructure.Utilities.Results.IResult;
 
 namespace LectureManagement.Services.Concretes
@@ -30,6 +31,24 @@ namespace LectureManagement.Services.Concretes
             if (!isUnique.Success)
             {
                 return isUnique;
+            }
+
+            if (lecture.Prerequisites.Any())
+            {
+                List<Lecture> prerequisities = new List<Lecture>();
+                foreach (var prerequisite in lecture.Prerequisites)
+                {
+                    var foundPrerequisite = _lectureDal.Get(x => x.Id == prerequisite.Id);
+                    if (foundPrerequisite != null)
+                    {
+                        prerequisities.Add(foundPrerequisite);
+                    }
+                }
+
+                if(prerequisities.Any())
+                {
+                    lecture.Prerequisites = prerequisities;
+                }
             }
 
             await _lectureDal.Add(lecture);
@@ -69,14 +88,14 @@ namespace LectureManagement.Services.Concretes
                 return isUnique;
             }
 
-            await _lectureDal.Update(lecture);
+            await _lectureDal.Update(lecture, lecture.Id);
             return new SuccessResult("Lecture Updated Successfully");
         }
 
         private IResult IsLectureGroupAndCodeUnique(Lecture entity)
         {
             var result = _lectureDal.Get(x => x.Code == entity.Code);
-            if (result != null && (result.IsGroup == false || entity.IsGroup == false))
+            if (result != null && (result.IsGroup == false || entity.IsGroup == false) && result.Id != entity.Id)
             {
                 return new ErrorResult("Lecture Code Must Be Unique");
             }

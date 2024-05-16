@@ -37,6 +37,7 @@ namespace LectureManagement.Services.Concretes
                                IsAcademicYearLatest(lectureInstructor),
                                IsSemesterSameWithLectureSemester(lectureInstructor),
                                IsLectureAlreadyAssignedToInstructor(lectureInstructor),
+                               IsInstructorScheduleSuitable(lectureInstructor),
                                IsLectureScheduleHasSchedule(lectureInstructor));
 
             if (!businessRules.Success)
@@ -92,7 +93,7 @@ namespace LectureManagement.Services.Concretes
                 return businessRules;
             }
 
-            await _lectureInstructorDal.Update(lectureInstructor);
+            await _lectureInstructorDal.Update(lectureInstructor, lectureInstructor.Id);
             return new SuccessResult("Lecture Instructor Updated Successfully");
         }
 
@@ -180,6 +181,40 @@ namespace LectureManagement.Services.Concretes
             }
 
             return new SuccessResult();
+        }
+
+        private IResult IsInstructorScheduleSuitable(LectureInstructor lectureInstructor)
+        {
+            var existingLectureInstructors = _lectureInstructorDal.GetAll(
+                x => x.InstructorId == lectureInstructor.InstructorId &&
+                x.AcademicYearId == lectureInstructor.AcademicYearId &&
+                x.Semester == lectureInstructor.Semester);
+
+            if(existingLectureInstructors == null || !existingLectureInstructors.Any())
+            {
+                return new SuccessResult();
+            }
+
+            var savedLectureSchedules = existingLectureInstructors.SelectMany(
+                            x => x.Lecture.Schedules.SelectMany(s => s.Schedule)).ToList();
+
+            var lecture = _lectureDal.Get(x => x.Id == lectureInstructor.LectureId);
+            if (lecture == null)
+            {
+                return new ErrorResult("Lecture Not Found");
+            }
+
+            var newLectureSchedule = lecture.Schedules.FirstOrDefault(
+                                     s => s.AcademicYearId == lectureInstructor.AcademicYearId &&
+                                     s.Semester == lectureInstructor.Semester)?.Schedule;
+
+            if (newLectureSchedule == null) 
+            {
+                return new ErrorResult("The programme of the lecture to be instructed was not found"); 
+            }
+
+            return Helpers.Helper.CompareSchedules(newLectureSchedule, savedLectureSchedules,
+                               "Instructor will serve another lecture during the relevant time interval. Please change the time interval");
         }
     }
 }

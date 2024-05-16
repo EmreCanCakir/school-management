@@ -12,12 +12,14 @@ namespace LectureManagement.Services.Concretes
     {
         private readonly ILectureScheduleDal _lectureScheduleDal;
         private readonly IAcademicYearDal _academicYearDal;
+        private readonly ILectureDal _lectureDal;
         private readonly IMapper _mapper;
-        public LectureScheduleService(ILectureScheduleDal lectureScheduleDal, IMapper mapper, IAcademicYearDal academicYearDal)
+        public LectureScheduleService(ILectureScheduleDal lectureScheduleDal, IMapper mapper, IAcademicYearDal academicYearDal, ILectureDal lectureDal)
         {
             _lectureScheduleDal = lectureScheduleDal;
             _mapper = mapper;
             _academicYearDal = academicYearDal;
+            _lectureDal = lectureDal;
         }
 
         public async Task<IResult> Add(LectureScheduleAddDto entity)
@@ -29,6 +31,7 @@ namespace LectureManagement.Services.Concretes
             }
 
             var lectureScheduleValid = BusinessRules.Run(
+                    IsLectureAlreadyScheduledInSameAcademicYear(lectureSchedule),
                     IsScheduleTimeValidWithClassroom(lectureSchedule),
                     IsScheduledTimeSuitableWithWeeklyHours(lectureSchedule),
                     IsSemesterSameWithLectureSemester(lectureSchedule),
@@ -87,17 +90,22 @@ namespace LectureManagement.Services.Concretes
                 return lectureScheduleValid;
             }
 
-            await _lectureScheduleDal.Update(lectureSchedule);
+            await _lectureScheduleDal.Update(lectureSchedule, lectureSchedule.Id);
             return new SuccessResult("Lecture Schedule Updated Successfully");
         }
 
         private IResult IsScheduleTimeValidWithClassroom(LectureSchedule lectureSchedule)
         {
             var lectureSchedulesByAcademicYearAndClassroom = GetAll().Data?.FindAll(
-                x => x.AcademicYear == lectureSchedule.AcademicYear &&
+                x => x.AcademicYearId == lectureSchedule.AcademicYearId &&
                 x.Semester == lectureSchedule.Semester &&
-                x.ClassroomId == lectureSchedule.ClassroomId &&
-                x.LectureId != lectureSchedule.LectureId);
+                x.ClassroomId == lectureSchedule.ClassroomId);
+
+            if (lectureSchedule.Id != Guid.Empty)
+            {
+                lectureSchedulesByAcademicYearAndClassroom = lectureSchedulesByAcademicYearAndClassroom?
+                    .Where(x => x.LectureId != lectureSchedule.LectureId).ToList();
+            }
 
             if (lectureSchedulesByAcademicYearAndClassroom == null || !lectureSchedulesByAcademicYearAndClassroom.Any())
             {
@@ -110,9 +118,37 @@ namespace LectureManagement.Services.Concretes
                 "Classroom will serve another lecture during the relevant time interval. Please change the time interval");
         }
 
+        private IResult IsLectureQuotaSuitableWithClassroomCapacity(LectureSchedule lectureSchedule)
+        {
+            var lecture = _lectureDal.Get(x => x.Id == lectureSchedule.LectureId);
+            if (lecture == null)
+            {
+                return new ErrorResult("Lecture Not Found");
+            }
+            
+
+
+            return new SuccessResult();
+        }
+
+        private IResult IsLectureAlreadyScheduledInSameAcademicYear(LectureSchedule lectureSchedule)
+        {
+            var lectureSchedules = GetAll().Data?.FindAll(
+                x => x.AcademicYearId == lectureSchedule.AcademicYearId &&
+                x.Semester == lectureSchedule.Semester &&
+                x.LectureId == lectureSchedule.LectureId);
+
+            if (lectureSchedules != null && lectureSchedules.Any())
+            {
+                return new ErrorResult("The lecture is already scheduled in the same academic year and semester");
+            }
+
+            return new SuccessResult();
+        }
+
         private IResult IsSemesterSameWithLectureSemester(LectureSchedule lectureSchedule)
         {
-            var lecture = GetById(lectureSchedule.Id).Data.Lecture;
+            var lecture = _lectureDal.Get(x => x.Id == lectureSchedule.LectureId);
             return Helpers.Helper.IsSemesterSameWithLectureSemester(lecture, lectureSchedule.Semester);
         }
 
@@ -137,12 +173,13 @@ namespace LectureManagement.Services.Concretes
             }
 
             var totalHours = lectureSchedule.Schedule.Sum(x => (x.Value.Item2 - x.Value.Item1).TotalHours);
-            if (totalHours > lectureSchedule.Lecture.HoursInWeek)
+            var lecture = _lectureDal.Get(x => x.Id == lectureSchedule.LectureId);
+            if (totalHours > lecture.HoursInWeek)
             {
                 return new ErrorResult("The total hours of the scheduled time cannot be greater than the weekly hours of the course");
             }
 
-            if (totalHours < lectureSchedule.Lecture.HoursInWeek)
+            if (totalHours < lecture.HoursInWeek)
             {
                 return new ErrorResult("The total hours of the scheduled time cannot be less than the weekly hours of the course");
             }

@@ -14,7 +14,7 @@ namespace LectureManagement.Model.Dtos
         public int HoursInWeek { get; set; }
         public int Quota { get; set; }
         public bool IsGroup { get; set; }
-        public List<Lecture> Prerequisites { get; set; } = new List<Lecture>();
+        public List<PrerequisiteDto> Prerequisites { get; set; } = new List<PrerequisiteDto>();
         public Guid DepartmentId { get; set; }
     }
 }
