@@ -2,6 +2,7 @@
 using Infrastructure.Utilities.Business;
 using Infrastructure.Utilities.Results;
 using LectureManagement.DataAccess.Abstracts;
+using LectureManagement.DataAccess.Concretes;
 using LectureManagement.Model;
 using LectureManagement.Model.Dtos;
 using LectureManagement.Services.Abstracts;
@@ -11,14 +12,16 @@ namespace LectureManagement.Services.Concretes
     public class LectureStudentService : ILectureStudentService
     {
         private readonly ILectureStudentDal _lectureStudentDal;
+        private readonly IAcademicYearDal _academicYearDal;
         private readonly IMapper _mapper;
         private readonly ILectureDal _lectureDal;
 
-        public LectureStudentService(ILectureStudentDal lectureStudentDal, IMapper mapper, ILectureDal lectureDal)
+        public LectureStudentService(ILectureStudentDal lectureStudentDal, IMapper mapper, ILectureDal lectureDal, IAcademicYearDal academicYearDal)
         {
             _lectureStudentDal = lectureStudentDal;
             _mapper = mapper;
             _lectureDal = lectureDal;
+            _academicYearDal = academicYearDal;
         }
 
         public async Task<IResult> Add(LectureStudentAddDto entity)
@@ -32,6 +35,8 @@ namespace LectureManagement.Services.Concretes
             var businessRules = BusinessRules.Run(
                                IsStudentAlreadyRegisteredToLecture(lectureStudent),
                                IsQuotaExceeded(lectureStudent),
+                               IsAcademicYearLatest(lectureStudent),
+                               IsSemesterSameWithLectureSemester(lectureStudent),
                                IsCreditExceeded(lectureStudent),
                                HasConflictedLecture(lectureStudent),
                                IsPassedPrerequisities(lectureStudent));
@@ -80,6 +85,8 @@ namespace LectureManagement.Services.Concretes
             var businessRules = BusinessRules.Run(
                                IsStudentAlreadyRegisteredToLecture(lectureStudent),
                                IsQuotaExceeded(lectureStudent),
+                               IsAcademicYearLatest(lectureStudent),
+                               IsSemesterSameWithLectureSemester(lectureStudent),
                                IsCreditExceeded(lectureStudent),
                                HasConflictedLecture(lectureStudent),
                                IsPassedPrerequisities(lectureStudent));
@@ -89,7 +96,7 @@ namespace LectureManagement.Services.Concretes
                 return businessRules;
             }
 
-            await _lectureStudentDal.Update(lectureStudent);
+            await _lectureStudentDal.Update(lectureStudent, lectureStudent.Id);
             return new SuccessResult("Lecture Student Updated Successfully");
         }
 
@@ -215,7 +222,7 @@ namespace LectureManagement.Services.Concretes
 
                 if (passedLecture == null)
                 {
-                    prerequisiteLectureCode = prerequisite.Code;
+                    prerequisiteLectureCode = _lectureDal.Get(x => x.Id == prerequisite.Id).Code;
                     return false;
                 }
 
@@ -228,6 +235,29 @@ namespace LectureManagement.Services.Concretes
             }
 
             return new SuccessResult();
+        }
+
+        private IResult IsAcademicYearLatest(LectureStudent lectureStudent)
+        {
+            var academicYears = _academicYearDal.GetAll();
+            var selectedAcademicYear = academicYears.FirstOrDefault(x => x.Id == lectureStudent.AcademicYearId);
+            if (selectedAcademicYear == null)
+            {
+                return new ErrorResult("Academic Year Not Found");
+            }
+
+            return Helpers.Helper.IsAcademicYearLatest(academicYears, lectureStudent.AcademicYearId);
+        }
+
+        private IResult IsSemesterSameWithLectureSemester(LectureStudent lectureStudent)
+        {
+            var lecture = _lectureDal.Get(x => x.Id == lectureStudent.LectureId);
+            if (lecture == null)
+            {
+                return new ErrorResult("Lecture Not Found, please select a lecture");
+            }
+
+            return Helpers.Helper.IsSemesterSameWithLectureSemester(lecture, lectureStudent.Semester);
         }
     }
 }

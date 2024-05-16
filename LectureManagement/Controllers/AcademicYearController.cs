@@ -53,7 +53,7 @@ namespace LectureManagement.Controllers
         }
 
         [HttpPut("Update")]
-        public async Task<IActionResult> UpdateAcademicYear([FromBody] AcademicYear academicYear)
+        public async Task<IActionResult> UpdateAcademicYear([FromBody] AcademicYearUpdateDto academicYear)
         {
             var result = await _academicYearService.Update(academicYear);
             if (!result.Success)

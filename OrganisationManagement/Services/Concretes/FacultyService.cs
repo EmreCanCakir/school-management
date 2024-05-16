@@ -49,7 +49,7 @@ namespace OrganisationManagement.Services.Concretes
         public async Task<IResult> Update(FacultyUpdateDto entity)
         {
             var faculty = _mapper.Map<Faculty>(entity);
-            await _facultyDal.Update(faculty);
+            await _facultyDal.Update(faculty, faculty.Id);
             return new SuccessResult("Faculty Updated Successfully");
         }
     }

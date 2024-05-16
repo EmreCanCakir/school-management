@@ -10,8 +10,10 @@ namespace LectureManagement.MapperProfile
         {
             CreateMap<Lecture, LectureAddDto>().ReverseMap();
             CreateMap<Lecture, LectureUpdateDto>().ReverseMap();
+            CreateMap<Lecture, PrerequisiteDto>().ReverseMap();
             
             CreateMap<AcademicYear, AcademicYearDto>().ReverseMap();
+            CreateMap<AcademicYear, AcademicYearUpdateDto>().ReverseMap();
 
             CreateMap<LectureSchedule, LectureScheduleAddDto>().ReverseMap();
             CreateMap<LectureSchedule, LectureScheduleUpdateDto>().ReverseMap();

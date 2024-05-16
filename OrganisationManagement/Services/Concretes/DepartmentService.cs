@@ -48,7 +48,7 @@ namespace OrganisationManagement.Services.Concretes
         public async Task<IResult> Update(DepartmentUpdateDto entity)
         {
             var department = _mapper.Map<Department>(entity);
-            await _departmentDal.Update(department);
+            await _departmentDal.Update(department, department.Id);
             return new SuccessResult("Department Updated Successfully");
         }
     }

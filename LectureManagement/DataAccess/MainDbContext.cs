@@ -1,7 +1,6 @@
 ﻿using LectureManagement.Model;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using System.Reflection.Emit;
 using DayOfWeek = LectureManagement.Model.DayOfWeek;
 
 namespace LectureManagement.DataAccess
@@ -16,10 +15,6 @@ namespace LectureManagement.DataAccess
 
         public MainDbContext(DbContextOptions<MainDbContext> options) : base(options)
         {
-        }
-        public MainDbContext()
-        {
-            
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -76,9 +71,6 @@ namespace LectureManagement.DataAccess
         private static void SetEagerLoading(ModelBuilder builder)
         {
             builder.Entity<Lecture>()
-                .Navigation(l => l.Prerequisites)
-                .AutoInclude();
-            builder.Entity<Lecture>()
                 .Navigation(l => l.Schedules)
                 .AutoInclude();
             builder.Entity<Lecture>()
@@ -125,7 +117,8 @@ namespace LectureManagement.DataAccess
             builder.Entity<Lecture>()
                 .Property(l => l.Type).IsRequired();
             builder.Entity<Lecture>()
-                .Property(l => l.IsGroup).IsRequired();
+                .Property(l => l.IsGroup).IsRequired()
+                .HasDefaultValue<bool>(false);
             builder.Entity<Lecture>()
                 .Property(l => l.Quota).IsRequired();
             builder.Entity<Lecture>()
@@ -149,6 +142,8 @@ namespace LectureManagement.DataAccess
             builder.Entity<LectureSchedule>()
                 .Property(s => s.AcademicYearId).IsRequired();
             builder.Entity<LectureSchedule>()
+                .Property(s => s.ClassroomId).IsRequired();
+            builder.Entity<LectureSchedule>()
                 .Property(s => s.Semester).IsRequired();
             builder.Entity<LectureSchedule>()
                 .Property(s => s.Schedule)
@@ -159,7 +154,7 @@ namespace LectureManagement.DataAccess
                 );
 
             builder.Entity<LectureSchedule>()
-                .Property(s => s.ClassroomId).ValueGeneratedOnAdd();
+                .Property(s => s.Id).ValueGeneratedOnAdd();
         }
 
         private static void ConfigureAcademicYearProperties(ModelBuilder builder)
@@ -172,6 +167,9 @@ namespace LectureManagement.DataAccess
                 .Property(a => a.EndDate).IsRequired();
             builder.Entity<AcademicYear>()
                 .HasIndex(a => a.EndDate).IsUnique();
+            builder.Entity<AcademicYear>()
+                .Property(a => a.Status).IsRequired()
+                .HasDefaultValue<AcademicYearStatus>(AcademicYearStatus.Active);
             builder.Entity<AcademicYear>()
                 .Property(a => a.Id).ValueGeneratedOnAdd();
         }
@@ -189,9 +187,9 @@ namespace LectureManagement.DataAccess
             builder.Entity<LectureInstructor>()
                 .Property(i => i.Id).ValueGeneratedOnAdd();
             builder.Entity<LectureInstructor>()
-                .Property(i => i.CreatedAt).ValueGeneratedOnAdd();
+                .Property(i => i.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
             builder.Entity<LectureInstructor>()
-                .Property(i => i.UpdatedAt).ValueGeneratedOnAddOrUpdate();
+                .Property(i => i.UpdatedAt).HasDefaultValueSql("GETUTCDATE()");
         }
 
         private static void ConfigureLectureStudentProperties(ModelBuilder builder)
@@ -207,9 +205,9 @@ namespace LectureManagement.DataAccess
             builder.Entity<LectureStudent>()
                 .Property(s => s.Id).ValueGeneratedOnAdd();
             builder.Entity<LectureStudent>()
-                .Property(s => s.CreatedAt).ValueGeneratedOnAdd();
+                .Property(s => s.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
             builder.Entity<LectureStudent>()
-                .Property(s => s.UpdatedAt).ValueGeneratedOnAddOrUpdate();
+                .Property(s => s.UpdatedAt).HasDefaultValueSql("GETUTCDATE()");
         }
     }
 }

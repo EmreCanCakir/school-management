@@ -49,7 +49,7 @@ namespace OrganisationManagement.Services.Concretes
         public async Task<IResult> Update(ClassroomUpdateDto entity)
         {
             var classroom = _mapper.Map<Classroom>(entity);
-            await _classroomDal.Update(classroom);
+            await _classroomDal.Update(classroom, classroom.Id);
             return new SuccessResult("Classroom Updated Successfully");
         }
     }

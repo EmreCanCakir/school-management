@@ -4,6 +4,7 @@ namespace LectureManagement.Model.Dtos
 {
     public class LectureStudentUpdateDto: IDto
     {
+        public Guid Id { get; set; }
         public Guid StudentId { get; set; }
         public Guid LectureId { get; set; }
         public Guid AcademicYearId { get; set; }
