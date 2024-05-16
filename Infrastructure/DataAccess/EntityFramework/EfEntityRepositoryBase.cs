@@ -15,15 +15,13 @@ namespace Infrastructure.DataAccess.EntityFramework
         }
         public async Task Add(TEntity entity)
         {
-            var addedEntity = _context.Entry(entity);
-            addedEntity.State = EntityState.Added;
+            _context.Set<TEntity>().Add(entity);
             await _context.SaveChangesAsync();
         }
 
         public async Task Delete(TEntity entity)
         {
-            var deletedEntity = _context.Entry(entity);
-            deletedEntity.State = EntityState.Deleted;
+            _context.Set<TEntity>().Remove(entity);
             await _context.SaveChangesAsync();
         }
 
@@ -39,10 +37,11 @@ namespace Infrastructure.DataAccess.EntityFramework
                 : _context.Set<TEntity>().Where(filter).ToList();
         }
 
-        public async Task Update(TEntity entity)
+        public async Task Update(TEntity entity, Guid id)
         {
-            var updatedEntity = _context.Entry(entity);
-            updatedEntity.State = EntityState.Modified;
+            var updatedEntity = _context.Set<TEntity>().Find(id);
+            _context.Entry(updatedEntity).CurrentValues.SetValues(entity);
+
             await _context.SaveChangesAsync();
         }
     }

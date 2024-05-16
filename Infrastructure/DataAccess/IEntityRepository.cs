@@ -13,7 +13,7 @@ namespace Infrastructure.DataAccess
         List<T> GetAll(Expression<Func<T, bool>> filter = null);
         T Get(Expression<Func<T, bool>> filter);
         Task Add(T entity);
-        Task Update(T entity);
+        Task Update(T entity, Guid id);
         Task Delete(T entity);
     }
 }
