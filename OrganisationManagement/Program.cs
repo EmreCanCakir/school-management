@@ -1,11 +1,14 @@
 using FluentValidation;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
+using OrganisationManagement.Consumers;
 using OrganisationManagement.DataAccess;
 using OrganisationManagement.DataAccess.Abstracts;
 using OrganisationManagement.DataAccess.Concretes;
 using OrganisationManagement.Services.Abstracts;
 using OrganisationManagement.Services.Concretes;
 using System.Reflection;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +20,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 ConfigureServices(builder);
+ConfigureRabbitMQ();
 
 void ConfigureServices(WebApplicationBuilder builder)
 {
@@ -34,6 +38,11 @@ void ConfigureServices(WebApplicationBuilder builder)
     builder.Services.AddTransient<IClassroomService, ClassroomService>();
 
     builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+    builder.Services.AddControllers().AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.WriteIndented = true;
+    });
 }
 
 var app = builder.Build();
@@ -53,3 +62,24 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+void ConfigureRabbitMQ()
+{
+    builder.Services.AddMassTransit(busConfigurator =>
+    {
+        busConfigurator.SetKebabCaseEndpointNameFormatter();
+        
+        busConfigurator.AddConsumer<GetClassroomDetailConsumer>();
+
+        busConfigurator.UsingRabbitMq((context, cfg) =>
+        {
+            cfg.Host(new Uri(builder.Configuration["MessageBroker:Host"]!), h =>
+            {
+                h.Username(builder.Configuration["MessageBroker:Username"]);
+                h.Password(builder.Configuration["MessageBroker:Password"]);
+            });
+
+            cfg.ConfigureEndpoints(context);
+        });
+    });
+}

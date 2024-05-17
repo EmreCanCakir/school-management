@@ -4,7 +4,6 @@ namespace OrganisationManagement.Model.Dtos
 {
     public class ClassroomUpdateDto: IDto
     {
-        #nullable disable
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Code { get; set; }

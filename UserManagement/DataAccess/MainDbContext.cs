@@ -51,9 +51,11 @@ namespace UserManagement.DataAccess
             builder.Entity<UserDetail>()
                 .Property(ud => ud.UserId).IsRequired();
             builder.Entity<UserDetail>()
-                .Property(ud => ud.CreatedAt).ValueGeneratedOnAdd();
+                .Property(ud => ud.Id).ValueGeneratedOnAdd();
             builder.Entity<UserDetail>()
-                .Property(ud => ud.UpdatedAt).ValueGeneratedOnAddOrUpdate();
+                .Property(ud => ud.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
+            builder.Entity<UserDetail>()
+                .Property(ud => ud.UpdatedAt).HasDefaultValueSql("GETUTCDATE()");
 
             builder.Entity<Lecturer>()
                 .Property(t => t.Title).IsRequired(false);
@@ -67,6 +69,8 @@ namespace UserManagement.DataAccess
                 .Property(t => t.Salary).IsRequired(false);
             builder.Entity<Lecturer>()
                 .Property(t => t.LecturerStatus).IsRequired();
+            builder.Entity<Lecturer>()
+                .Property(t => t.Id).ValueGeneratedOnAdd();
 
             builder.Entity<Student>()
                 .Property(s => s.StudentNumber).IsRequired();
@@ -79,7 +83,9 @@ namespace UserManagement.DataAccess
             builder.Entity<Student>()
                 .Property(s => s.GPA).IsRequired(false);
             builder.Entity<Student>()
-                .Property(s => s.AdvisorId).IsRequired(false);
+                .Property(s => s.AdvisorId).IsRequired();
+            builder.Entity<Student>()
+                .Property(t => t.Id).ValueGeneratedOnAdd();
         }
         private static void SeedRoles(ModelBuilder modelBuilder)
         {

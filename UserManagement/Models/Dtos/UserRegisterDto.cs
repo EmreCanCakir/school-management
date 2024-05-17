@@ -2,7 +2,6 @@
 {
     public class UserRegisterDto
     {
-#nullable disable
         public string Email { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
@@ -12,14 +11,13 @@
         public string LastName { get; set; }
         public long IdentityNumber { get; set; }
         public DateOnly DateOfBirth { get; set; }
-        public int DepartmentId { get; set; }
-        public int FacultyId { get; set; }
-#nullable enable
+        public string DepartmentId { get; set; }
+        public string FacultyId { get; set; }
         public string? UserId { get; set; }
         public string? Address { get; set; }
         public string? Gender { get; set; }
     }
-#nullable disable
+
     public class LecturerRegisterDto : UserRegisterDto
     {
         public UserType UserType { get; set; } = Models.UserType.Lecturer;
@@ -37,6 +35,6 @@
         public DateTime EnrollmentDate { get; set; }
         public string DegreeProgram { get; set; }
         public StudentStatus StudentStatus { get; set; } = Models.StudentStatus.Active;
-        public string AdvisorId { get; set; }
+        public Guid AdvisorId { get; set; }
     }
 }

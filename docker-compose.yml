@@ -13,6 +13,8 @@ services:
     ports:
       - "8080:8080"
       - "8081:8081"
+    depends_on:
+      - db
 
   db:
     image: mcr.microsoft.com/mssql/server:2019-latest
@@ -22,6 +24,10 @@ services:
       MSSQL_SA_PASSWORD: YourStrong!Passw0rd
     ports:
       - "1433:1433"
+    volumes:
+      - ./data:/var/opt/mssql/data
+      - ./log:/var/opt/mssql/log
+      - ./secrets:/var/opt/mssql/secrets
 
   usermanagement:
     image: ${DOCKER_REGISTRY-}usermanagement
@@ -32,6 +38,8 @@ services:
     ports:
       - "5000:5000"
       - "5001:5001"
+    depends_on:
+      - db
 
   organisationmanagement:
     image: ${DOCKER_REGISTRY-}organisationmanagement
@@ -47,6 +55,8 @@ services:
     ports:
       - "4000:4000"
       - "4001:4001"  
+    depends_on:
+      - db
 
   client:
     image: ${DOCKER_REGISTRY-}client

@@ -24,7 +24,7 @@ namespace OrganisationManagement.Controllers
             var faculties = _facultyService.GetAll();
             if (!faculties.Success)
             {
-                return BadRequest(faculties.Message);
+                return BadRequest(faculties);
             }
 
             return Ok(faculties);
@@ -36,7 +36,7 @@ namespace OrganisationManagement.Controllers
             var faculty = _facultyService.GetById(id);
             if (!faculty.Success)
             {
-                return BadRequest(faculty.Message);
+                return BadRequest(faculty);
             }
 
             return Ok(faculty);
@@ -48,7 +48,7 @@ namespace OrganisationManagement.Controllers
             IResult result = await _facultyService.Add(faculty);
             if (!result.Success)
             {
-                return BadRequest(result.Message);
+                return BadRequest(result);
             }
 
             return Ok(result);
@@ -60,7 +60,7 @@ namespace OrganisationManagement.Controllers
             IResult result = await _facultyService.Update(faculty);
             if (!result.Success)
             {
-                return BadRequest(result.Message);
+                return BadRequest(result);
             }
 
             return Ok(result);
@@ -72,7 +72,7 @@ namespace OrganisationManagement.Controllers
             IResult result = await _facultyService.Delete(id);
             if (!result.Success)
             {
-                return BadRequest(result.Message);
+                return BadRequest(result);
             }
 
             return Ok(result);

@@ -1,65 +1,48 @@
-﻿using Infrastructure.DataAccess;
-using Infrastructure.Entities.Abstracts;
+﻿using Infrastructure.Entities.Abstracts;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.DataAccess.EntityFramework
 {
     public class EfEntityRepositoryBase<TEntity, TContext> : IEntityRepository<TEntity>
         where TEntity : class, IEntity, new()
-        where TContext : DbContext, new()
+        where TContext : DbContext
     {
+        private readonly TContext _context;
+        public EfEntityRepositoryBase(TContext context)
+        {
+            _context = context;
+        }
         public async Task Add(TEntity entity)
         {
-            using (TContext context = new TContext())
-            {
-                var addedEntity = context.Entry(entity);
-                addedEntity.State = EntityState.Added;
-                await context.SaveChangesAsync();
-            }
+            _context.Set<TEntity>().Add(entity);
+            await _context.SaveChangesAsync();
         }
 
         public async Task Delete(TEntity entity)
         {
-            using (TContext context = new TContext())
-            {
-                var deletedEntity = context.Entry(entity);
-                deletedEntity.State = EntityState.Deleted;
-                await context.SaveChangesAsync();
-            }
+            _context.Set<TEntity>().Remove(entity);
+            await _context.SaveChangesAsync();
         }
 
         public TEntity Get(Expression<Func<TEntity, bool>> filter)
         {
-            using (TContext context = new TContext())
-            {
-                return context.Set<TEntity>().FirstOrDefault(filter);
-            }
+            return _context.Set<TEntity>().FirstOrDefault(filter);
         }
 
         public List<TEntity> GetAll(Expression<Func<TEntity, bool>> filter = null)
         {
-            using (TContext context = new TContext())
-            {
-                return filter == null
-                    ? context.Set<TEntity>().ToList()
-                    : context.Set<TEntity>().Where(filter).ToList();
-            }
+            return filter == null
+                ? _context.Set<TEntity>().ToList()
+                : _context.Set<TEntity>().Where(filter).ToList();
         }
 
-        public async Task Update(TEntity entity)
+        public async Task Update(TEntity entity, Guid id)
         {
-            using (TContext context = new TContext())
-            {
-                var updatedEntity = context.Entry(entity);
-                updatedEntity.State = EntityState.Modified;
-                await context.SaveChangesAsync();
-            }
+            var updatedEntity = _context.Set<TEntity>().Find(id);
+            _context.Entry(updatedEntity).CurrentValues.SetValues(entity);
+
+            await _context.SaveChangesAsync();
         }
     }
 }

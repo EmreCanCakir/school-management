@@ -6,7 +6,6 @@ namespace OrganisationManagement.Model
 {
     public class Classroom: IEntity
     {
-#nullable disable
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }

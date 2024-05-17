@@ -12,8 +12,8 @@ using UserManagement.DataAccess;
 namespace UserManagement.Migrations
 {
     [DbContext(typeof(MainDbContext))]
-    [Migration("20240507091215_ChangeUserDetailAndSeedRoles")]
-    partial class ChangeUserDetailAndSeedRoles
+    [Migration("20240516165958_UserDetailAndIdentity")]
+    partial class UserDetailAndIdentity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,21 +54,21 @@ namespace UserManagement.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "1e705930-0c62-4d96-9c76-5b0ec9ec1827",
+                            Id = "bb4e6253-ae82-49ad-bc43-b7d85bd04a4b",
                             ConcurrencyStamp = "1",
                             Name = "Student",
                             NormalizedName = "STUDENT"
                         },
                         new
                         {
-                            Id = "a781ac63-4428-4efb-ba7a-bbe6e2e1075c",
+                            Id = "8624ad50-4897-456d-b27b-762826506eca",
                             ConcurrencyStamp = "2",
                             Name = "Lecturer",
                             NormalizedName = "LECTURER"
                         },
                         new
                         {
-                            Id = "1829cde2-583f-4ecc-9751-8ace702cf901",
+                            Id = "e0127198-f1f2-46cd-8657-623d7b1947bc",
                             ConcurrencyStamp = "3",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
@@ -248,25 +248,31 @@ namespace UserManagement.Migrations
 
             modelBuilder.Entity("UserManagement.Models.UserDetail", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<DateOnly>("DateOfBirth")
                         .HasColumnType("date");
 
-                    b.Property<int>("DepartmentId")
-                        .HasColumnType("int");
+                    b.Property<string>("DepartmentId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("FacultyId")
-                        .HasColumnType("int");
+                    b.Property<string>("FacultyId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Gender")
@@ -276,15 +282,19 @@ namespace UserManagement.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MiddleName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("UserType")
@@ -295,8 +305,7 @@ namespace UserManagement.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("UserId")
-                        .IsUnique()
-                        .HasFilter("[UserId] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("user_details", (string)null);
 
@@ -319,8 +328,8 @@ namespace UserManagement.Migrations
                     b.Property<int>("LecturerStatus")
                         .HasColumnType("int");
 
-                    b.Property<string>("Position")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("PositionId")
+                        .HasColumnType("int");
 
                     b.Property<decimal?>("Salary")
                         .HasColumnType("decimal(18,2)");
@@ -337,8 +346,8 @@ namespace UserManagement.Migrations
                 {
                     b.HasBaseType("UserManagement.Models.UserDetail");
 
-                    b.Property<string>("AdvisorId")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("AdvisorId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("DegreeProgram")
                         .HasColumnType("nvarchar(max)");
@@ -416,7 +425,9 @@ namespace UserManagement.Migrations
                 {
                     b.HasOne("UserManagement.Models.User", "User")
                         .WithOne("UserDetail")
-                        .HasForeignKey("UserManagement.Models.UserDetail", "UserId");
+                        .HasForeignKey("UserManagement.Models.UserDetail", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });

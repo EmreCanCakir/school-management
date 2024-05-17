@@ -20,7 +20,7 @@ namespace OrganisationManagement.Controllers
             var departments = _departmentService.GetAll();
             if (!departments.Success)
             {
-                return BadRequest(departments.Message);
+                return BadRequest(departments);
             }
 
             return Ok(departments);
@@ -32,7 +32,7 @@ namespace OrganisationManagement.Controllers
             var department = _departmentService.GetById(id);
             if (!department.Success)
             {
-                return BadRequest(department.Message);
+                return BadRequest(department);
             }
 
             return Ok(department);
@@ -44,7 +44,7 @@ namespace OrganisationManagement.Controllers
             IResult result = await _departmentService.Add(department);
             if (!result.Success)
             {
-                return BadRequest(result.Message);
+                return BadRequest(result);
             }
 
             return Ok(result);
@@ -56,7 +56,7 @@ namespace OrganisationManagement.Controllers
             IResult result = await _departmentService.Update(department);
             if (!result.Success)
             {
-                return BadRequest(result.Message);
+                return BadRequest(result);
             }
 
             return Ok(result);
@@ -68,7 +68,7 @@ namespace OrganisationManagement.Controllers
             IResult result = await _departmentService.Delete(id);
             if (!result.Success)
             {
-                return BadRequest(result.Message);
+                return BadRequest(result);
             }
 
             return Ok(result);

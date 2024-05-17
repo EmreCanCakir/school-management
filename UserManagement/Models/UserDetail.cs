@@ -10,13 +10,11 @@ namespace UserManagement.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
- #nullable enable
         public long IdentityNumber { get; set; }
-#nullable disable
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public int DepartmentId { get; set; }
-        public int FacultyId { get; set; }
+        public string DepartmentId { get; set; }
+        public string FacultyId { get; set; }
         public string UserId { get; set; }
 #nullable enable
         public string? MiddleName { get; set; }
