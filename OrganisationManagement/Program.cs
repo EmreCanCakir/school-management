@@ -1,5 +1,7 @@
 using FluentValidation;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
+using OrganisationManagement.Consumers;
 using OrganisationManagement.DataAccess;
 using OrganisationManagement.DataAccess.Abstracts;
 using OrganisationManagement.DataAccess.Concretes;
@@ -18,6 +20,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 ConfigureServices(builder);
+ConfigureRabbitMQ();
 
 void ConfigureServices(WebApplicationBuilder builder)
 {
@@ -59,3 +62,24 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+void ConfigureRabbitMQ()
+{
+    builder.Services.AddMassTransit(busConfigurator =>
+    {
+        busConfigurator.SetKebabCaseEndpointNameFormatter();
+        
+        busConfigurator.AddConsumer<GetClassroomDetailConsumer>();
+
+        busConfigurator.UsingRabbitMq((context, cfg) =>
+        {
+            cfg.Host(new Uri(builder.Configuration["MessageBroker:Host"]!), h =>
+            {
+                h.Username(builder.Configuration["MessageBroker:Username"]);
+                h.Password(builder.Configuration["MessageBroker:Password"]);
+            });
+
+            cfg.ConfigureEndpoints(context);
+        });
+    });
+}

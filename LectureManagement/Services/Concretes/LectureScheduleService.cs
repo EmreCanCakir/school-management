@@ -6,6 +6,8 @@ using LectureManagement.Services.Abstracts;
 using IResult = Infrastructure.Utilities.Results.IResult;
 using Infrastructure.Utilities.Business;
 using AutoMapper;
+using MassTransit;
+using Contracts;
 namespace LectureManagement.Services.Concretes
 {
     public class LectureScheduleService : ILectureScheduleService
@@ -14,12 +16,14 @@ namespace LectureManagement.Services.Concretes
         private readonly IAcademicYearDal _academicYearDal;
         private readonly ILectureDal _lectureDal;
         private readonly IMapper _mapper;
-        public LectureScheduleService(ILectureScheduleDal lectureScheduleDal, IMapper mapper, IAcademicYearDal academicYearDal, ILectureDal lectureDal)
+        private readonly ClassroomDetailResponseService _classroomDetailResponseService;
+        public LectureScheduleService(ILectureScheduleDal lectureScheduleDal, IMapper mapper, IAcademicYearDal academicYearDal, ILectureDal lectureDal, ClassroomDetailResponseService classroomDetailResponseService)
         {
             _lectureScheduleDal = lectureScheduleDal;
             _mapper = mapper;
             _academicYearDal = academicYearDal;
             _lectureDal = lectureDal;
+            _classroomDetailResponseService = classroomDetailResponseService;
         }
 
         public async Task<IResult> Add(LectureScheduleAddDto entity)
@@ -35,7 +39,9 @@ namespace LectureManagement.Services.Concretes
                     IsScheduleTimeValidWithClassroom(lectureSchedule),
                     IsScheduledTimeSuitableWithWeeklyHours(lectureSchedule),
                     IsSemesterSameWithLectureSemester(lectureSchedule),
-                    IsAcademicYearLatest(lectureSchedule));
+                    IsAcademicYearLatest(lectureSchedule),
+                    await IsLectureQuotaSuitableWithClassroomCapacity(lectureSchedule),
+                    await IsLectureAndClassroomInSameDepartment(lectureSchedule));
 
             if (!lectureScheduleValid.Success)
             {
@@ -118,15 +124,46 @@ namespace LectureManagement.Services.Concretes
                 "Classroom will serve another lecture during the relevant time interval. Please change the time interval");
         }
 
-        private IResult IsLectureQuotaSuitableWithClassroomCapacity(LectureSchedule lectureSchedule)
+        private async Task<IResult> IsLectureQuotaSuitableWithClassroomCapacity(LectureSchedule lectureSchedule)
         {
             var lecture = _lectureDal.Get(x => x.Id == lectureSchedule.LectureId);
             if (lecture == null)
             {
                 return new ErrorResult("Lecture Not Found");
             }
-            
 
+            var classroomDetail = await _classroomDetailResponseService.GetClassroomDetailAsync(lectureSchedule.ClassroomId);
+            if (!classroomDetail.Success)
+            {
+                return new ErrorResult(classroomDetail.Message);
+            }
+
+            if (classroomDetail.Data.Capacity < lecture.Quota)
+            {
+                return new ErrorResult("The quota of the lecture cannot be greater than the capacity of the classroom");
+            }
+
+            return new SuccessResult();
+        }
+
+        private async Task<IResult> IsLectureAndClassroomInSameDepartment(LectureSchedule lectureSchedule)
+        {
+            var lecture = _lectureDal.Get(x => x.Id == lectureSchedule.LectureId);
+            if (lecture == null)
+            {
+                return new ErrorResult("Lecture Not Found");
+            }
+
+            var classroomDetail = await _classroomDetailResponseService.GetClassroomDetailAsync(lectureSchedule.ClassroomId);
+            if (!classroomDetail.Success)
+            {
+                return new ErrorResult(classroomDetail.Message);
+            }
+
+            if (classroomDetail.Data.DepartmentId != lecture.DepartmentId)
+            {
+                return new ErrorResult("Lecture cannot be scheduled for a classroom in a different department");
+            }
 
             return new SuccessResult();
         }

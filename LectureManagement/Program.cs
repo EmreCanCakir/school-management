@@ -68,6 +68,8 @@ void ConfigureServices(IServiceCollection services) {
     services.AddTransient<IAcademicYearService, AcademicYearService>();
     services.AddTransient<IAcademicYearDal, AcademicYearDal>();
 
+    services.AddScoped<ClassroomDetailResponseService>();
+
     services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
     services.AddAutoMapper(Assembly.GetExecutingAssembly());
 

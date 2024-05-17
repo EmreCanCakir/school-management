@@ -43,6 +43,11 @@ namespace OrganisationManagement.Services.Concretes
         public IDataResult<Classroom> GetById(Guid id)
         {
             var result = _classroomDal.Get(x => x.Id == id);
+            if(result == null)
+            {
+                return new ErrorDataResult<Classroom>(null, "Classroom Not Found");
+            }
+
             return new SuccessDataResult<Classroom>(result, "Classroom Get Successfully");
         }
 
